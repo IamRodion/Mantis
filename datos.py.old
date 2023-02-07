@@ -1,0 +1,139 @@
+import os
+
+productos = [
+    ["Juego de Cuellos Acrílico", 3800],
+    ["Solo Cuello Acrílico", 2000],
+    ["Solo Tira Acrílico", 2000],
+    ["Juego de Cuello Letras", 5000],
+    ["Cuello y Puño Letras", 6000],
+    ["Solo Cuello Letras", 3500],
+    ["Juego de Cuello Hilo", 4000],
+    ["Solo Cuello Hilo", 2200],
+    ["Juego Fajas Completo", 12000],
+    ["Solo Faja Dobles", 6000],
+    ["Cuello Redondo Doble", 4000],
+]
+
+# productos = [
+#     ["Juego con Acrílico", 3800],
+#     ["Cuello con Acrílico", 2000],
+#     ["Tira con Acrílico", 2000],
+#     ["Juego con Letras", 5000],
+#     ["Cuello y Puño Letras", 6000],
+#     ["Solo Cuello Letras", 3500],
+#     ["Juego de Cuello Hilo", 4000],
+#     ["Solo Cuello Hilo", 2200],
+#     ["Juego Fajas Completo", 12000],
+#     ["Solo Faja Dobles", 6000],
+#     ["Cuello Redondo Doble", 4000],
+# ]
+
+
+MENU1 = """\tMENU PRINCIPAL
+[1] Crear Pedido
+[2] Ver pedidos
+
+Elije una opción: """
+
+MENU2 = """\tCREANDO PEDIDO
+[1] Crear Orden
+[2] Terminar Pedido
+
+Elije una opción: """
+
+orden_de_ejemplo = [ # Una orden de ejemplo para hace pruebas
+    ['Juego Acrílico', '30'],
+    ['Orillo', 'Verde', '2'],
+    ['Linea', 'Blanco', '1'],
+    ['Linea', 'Verde', '1'],
+    ['Fondo', 'Blanco', 'Fondo']
+]
+
+pedido_de_ejemplo = [ # Un pedido de ejemplo para hacer pruebas
+    orden_de_ejemplo
+]
+
+def limpiarPantalla():
+    os.system("clear")
+
+def crearPatron():
+    tipos = ["Orillo", "Linea", "Letras", "Fondo"]
+    limpiarPantalla()
+    print("\tCREANDO PATRON")
+    for tipo in tipos:
+        print(f'[{tipos.index(tipo)}] {tipo}')
+    elección = input("\nIndique el tipo de linea: ")
+
+    for tipo in tipos:
+        if elección == str(tipos.index(tipo)):
+            color = input('Indique el color o código: ')
+            vueltas = input('Indique la cantidad de vueltas: ')
+
+            patron = [tipo, color, vueltas]
+            return patron
+        else:
+            pass
+    
+
+def crearOrden():
+    limpiarPantalla()
+    orden = []
+    print("\tCREANDO ORDEN")
+
+    for producto in productos:
+        print(f'[{productos.index(producto)}] {producto[0]}')
+
+    elección = input("\nElija el producto: ")
+
+    for producto in productos:
+        if elección == str(productos.index(producto)):
+            cantidad = int(input('Elija la cantidad: '))
+
+            orden.append([producto[0], cantidad, producto[1]*cantidad])
+
+            while True:
+                patron = crearPatron()
+                if patron[0] == 'Fondo':
+                    orden.append(patron)
+                    break
+                else:
+                    orden.append(patron)
+        else:
+            pass
+    
+    # patron = crearPatron()
+    # orden.append(patron)
+
+    return orden
+
+def crearPedido():
+    cliente = input('Cliente: ')
+    while True:
+        limpiarPantalla()
+        print(f'Nombre del cliente: {cliente}')
+        respuesta = input(MENU2)
+        if respuesta == '1':
+            orden = crearOrden()
+        elif respuesta == '2':
+            verPedidos(orden, cliente)
+        else:
+            print('La opción indicada no es correcta')
+
+def verPedidos(pedido, cliente):
+    limpiarPantalla()
+    print(f"""\tPEDIDOS GUARDADOS
+Nombre del cliente: {cliente}\n
+Tipo de pedido: {pedido[0][0]}
+Cantidad: {pedido[0][1]}
+Precio: {pedido[0][2]}
+\n\t\tPatrón""")
+    print("Zona\tCódigo/Color\tVueltas")
+
+    for i in pedido[1:]:
+        print(f"{i[0]}\t{i[1]}\t\t{i[2]}")
+    input()
+        
+
+if __name__ == '__main__':
+    limpiarPantalla()
+    crearPedido()
