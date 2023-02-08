@@ -1,3 +1,5 @@
+#Programa para hacer pruebas con los datos en la base de datos
+
 import os, time, json
 import sqlite3 as sql
 
