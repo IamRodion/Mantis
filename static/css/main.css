@@ -12,6 +12,11 @@ img {
     height: 2.5rem;
 }
 
+#letra {
+    width: 5rem;
+    height: 5rem;
+}
+
 #tarjeta {
     width: 20rem;
     height: 12rem;
