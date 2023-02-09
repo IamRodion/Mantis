@@ -1,0 +1,31 @@
+<!-- En este documento va la tabla con los pedidos recibidos por la base de datos -->
+{% extends "navbar.html" %}
+
+{% block content %}
+    <div class="table-responsive">
+        <table class="table table-striped table-sm" summary="Lista de pedidos registrados" >
+            <caption>Pedidos Registrados</caption>
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Total</th>
+                    <th scope="col">Pedido</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pedido in pedidosDB %}
+                <tr>
+                    <td>{{ pedido[0] }}</td>
+                    <td>{{ pedido[1] }}</td>
+                    <td>{{ pedido[2] }}</td>
+                    <td>{{ pedido[3] }}</td>
+                    <td><a href="#">Ver pedido</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}
