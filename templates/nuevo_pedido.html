@@ -1,0 +1,11 @@
+<!-- En este documento va la página para crear nuevos pedidos, la barra de navegación ya está incluida -->
+{% extends "navbar.html" %}
+
+{% block content %}
+<h1>Nuevo Pedido</h1>
+<form action="/nuevo_pedido" method="post">
+    <label for="post-cliente">Cliente: </label><input id="post-cliente" type="text" name="cliente" required autofocus>
+    <label for="post-pedido">Pedido: </label><input id="post-cliente" type="text" name="pedido" required>
+    <input type="submit" value="Crear Pedido">
+</form>
+{% endblock %}
