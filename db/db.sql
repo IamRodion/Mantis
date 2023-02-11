@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS "Pedidos" ( -- Tabla que almacena los pedidos
     cliente VARCHAR(255) NOT NULL,
     fecha VARCHAR(255) NOT NULL,
     total INT NOT NULL,
-    ordenes TEXT NOT NULL
+    estado TEXT NOT NULL,
+    pedido TEXT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "Productos" ( -- Tabla que almacena productos y precios.
@@ -26,10 +27,10 @@ VALUES
     ('recepcion', "1234"),
     ('produccion', "1234");
 
-INSERT INTO "Pedidos" ("cliente", "fecha", "total", "ordenes") -- Registrar pedidos en base de datos.
+INSERT INTO "Pedidos" ("cliente", "fecha", "total", "estado", "pedido") -- Registrar pedidos en base de datos.
 VALUES
-    ("Pablo Tapias", "28/01/2023 21:22:37" ,114000, '["Juego de Cuellos Acrílico",30,114000,"O.verde.2-L.blanco.2-L.verde.2-F.blanco"]'), --OLCF (Orillo, Linea, Caracter, Fondo)
-    ("Maria Gomez", "28/01/2023 18:13:47", 560000, "['Juego de Cuello Hilo', '20', '80000', 'O.rojo.2-L.verde.4-F.rojo'], ['Juego Fajas Completo', '40', '480000', 'O.amarillo.2-F.amarillo']"); --OLCF (Orillo, Linea, Caracter, Fondo)
+    ("Pablo Tapias", "28/01/2023 21:22:37" ,114000, "Pendiente", '["Juego de Cuellos Acrílico",30,114000,"O.verde.2-L.blanco.2-L.verde.2-F.blanco"]'), --OLCF (Orillo, Linea, Caracter, Fondo)
+    ("Maria Gomez", "28/01/2023 18:13:47", 560000, "Pendiente", "['Juego de Cuello Hilo', '20', '80000', 'O.rojo.2-L.verde.4-F.rojo'], ['Juego Fajas Completo', '40', '480000', 'O.amarillo.2-F.amarillo']"); --OLCF (Orillo, Linea, Caracter, Fondo)
 
 INSERT INTO "Productos" ("producto", "precio") -- Registrar los productos disponibles en la tabla productos.
 VALUES

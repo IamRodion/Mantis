@@ -12,6 +12,7 @@
                 <th scope="col">Cliente</th>
                 <th scope="col">Fecha</th>
                 <th scope="col">Total</th>
+                <th scope="col">Estado</th>
                 <th scope="col">Pedido</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{ pedido[1] }}</td>
                 <td>{{ pedido[2] }}</td>
                 <td>{{ pedido[3] }}</td>
+                <td>{{ pedido[4] }}</td>
                 <td><a href="{{url_for('verPedido', id=pedido[0])}}">Ver Pedido</a></td>
             </tr>
             {% endfor %}

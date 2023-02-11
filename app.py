@@ -41,11 +41,12 @@ def crearPedido(): # Función que registra un pedido en la base de datos. Argume
         return render_template('nuevo_pedido.html')
     elif request.method == 'POST':
         cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
-        fecha = obtenerFecha() # Obteniendo fecha.
         cliente = request.form['cliente']
-        pedido = request.form['pedido']
+        fecha = obtenerFecha() # Obteniendo fecha.
         total = 10000
-        query = f'INSERT INTO Pedidos ("cliente", "fecha", "total", "ordenes") VALUES("{cliente}", "{fecha}", {total}, "{pedido}")' # Solicitud a realizar.
+        estado = 'Pendiente'
+        pedido = request.form['pedido']
+        query = f'INSERT INTO Pedidos ("cliente", "fecha", "total", "estado", "pedido") VALUES("{cliente}", "{fecha}", {total}, "{estado}", "{pedido}")' # Solicitud a realizar.
         cursor.execute(query) # Ejecutar una solicitud con el cursor.
         conn.commit() # Aplicar cambios.
         conn.close() # Cerrar conexión.
