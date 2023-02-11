@@ -24,19 +24,11 @@
                         <input type="submit" value="Buscar">
                     </form>
                 </li>
-                <li><button type="button" onclick="cambiarModo()">Modo Oscuro</button></li>
             </ul>
         </nav>
     </header>
     {% block content %}
     {% endblock %}
 
-    <!-- script para cambiar a modo oscuro -->
-    <script type="text/javascript">
-        function cambiarModo() { 
-          var cuerpoWeb = document.body; 
-          cuerpoWeb.classList.toggle("modoOscuro"); 
-        } 
-      </script>
 </body>
 </html>
