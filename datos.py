@@ -55,10 +55,13 @@ def borrarPedido(id): # Función para borrar un medido de la tabla pedidos a tra
     conn.close() # Cerrar conexión.
 
 
-pedido = '[["Juego de Cuellos Acrílico",30,114000,"O.verde.2-L.blanco.2-L.verde.2-F.blanco"],["Juego de Cuellos Acrílico",30,114000,"O.verde.2-L.blanco.2-L.verde.2-F.blanco"]]'
-crearPedido("John Doe", 172000, pedido)
+def buscarPedido(dato): # Función para buscar un pedido por número de pedido o por nombre del cliente.
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    query = f'SELECT * FROM "Pedidos" WHERE id LIKE "%{dato}%" OR cliente LIKE "%{dato}%" ORDER BY id;' # Solicitud a realizar.
+    cursor.execute(query) # Ejecutar una solicitud con el cursor.
+    pedidos = cursor.fetchall() # Se vuelcan los datos en una variable.
+    conn.commit() # Aplicar cambios.
+    conn.close() # Cerrar conexión.
 
-pedidos = verPedidos()
+    return pedidos # Devuelve los datos recibidos.    
 
-for i in pedidos:
-    print(i)
