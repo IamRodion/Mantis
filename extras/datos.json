@@ -1,15 +1,1 @@
-{
-  "cliente": "Maria Casillas",
-  "fecha": "28/01/2023 18:31:15",
-  "total": 228000,
-  "pedido": [
-       ["Juego de Cuellos Acrílico",
-        "30",
-        "114000",
-        "O.verde.2-L.blanco.2-L.verde.2-F.blanco"],
-       ["Juego de Cuellos Acrílico",
-        "30",
-        "114000",
-        "O.verde.2-L.blanco.2-L.verde.2-F.blanco"]
-    ]
-}
+{"productos": ["Juego de Cuellos Acrílico"], "cantidades": [30], "totales": [114000], "patrones":["O.verde.2-L.blanco.2-L.verde.2-F.blanco"]}
