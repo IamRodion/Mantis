@@ -1,0 +1,32 @@
+<!-- En este documento va la tabla con los pedidos recibidos por la base de datos -->
+{% extends "navbar.html" %}
+
+{% block content %}
+<h1>Buscar Pedidos con "{{dato}}"</h1> <!--Variable con el término a buscar-->
+<div>
+    <table>
+        <caption>Pedidos Encontrados</caption>
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Total</th>
+                <th scope="col">Pedido</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidosDB %}
+            <tr>
+                <td>{{ pedido[0] }}</td>
+                <td>{{ pedido[1] }}</td>
+                <td>{{ pedido[2] }}</td>
+                <td>{{ pedido[3] }}</td>
+                <td><a href="{{url_for('verPedido', id=pedido[0])}}">Ver Pedido</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
