@@ -1,0 +1,30 @@
+<!-- En este documento va la visualización de pedidos individualmente -->
+{% extends "navbar.html" %}
+
+{% block content %}
+
+<h1>Ver Pedido</h1>
+<table>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Cliente</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Total</th>
+            <th scope="col">Pedido</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pedido in pedidoDB %}
+        <tr>
+            <td>{{ pedido[0] }}</td>
+            <td>{{ pedido[1] }}</td>
+            <td>{{ pedido[2] }}</td>
+            <td>{{ pedido[3] }}</td>
+            <td>{{ pedido[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
