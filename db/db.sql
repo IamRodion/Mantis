@@ -66,3 +66,6 @@ SELECT * FROM "Productos"; -- Productos contenido de la tabla Usuarios
 
 --          Queries para modificar datos en la tabla
 UPDATE "Pedidos" SET cliente = 'Maria Gomez' WHERE id = 11;
+
+--          Queries para buscar un pedido en la tabla
+SELECT * FROM "Pedidos" WHERE id LIKE "%maria%" OR cliente LIKE "%maria%" ORDER BY id;
