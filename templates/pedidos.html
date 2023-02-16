@@ -2,9 +2,32 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<h1>Pedidos Registrados</h1>
-<div>
-    <table>
+
+<!-- Este código muestra mensajes en pantalla -->
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+{% if mensajes %}
+    {% for categoria, mensaje in mensajes %}
+        {% if categoria == 'Rojo' %}
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{ mensaje[1] }}</strong>".</span>
+            </div>
+        {% endif %}
+        {% if categoria == 'Verde' %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{ mensaje[1] }}</strong>".</span>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<!-- Este código muestra mensajes en pantalla -->
+
+
+<div id="pagina">
+    <h1>Pedidos Registrados</h1>
+
+    <!-- Este código muestra la una tabla con los pedidos registrados -->
+    <table class="table table-hover" id="tabla">
         <caption>Pedidos</caption>
         <thead>
             <tr>
@@ -18,17 +41,30 @@
         </thead>
         <tbody>
             {% for pedido in pedidosDB %}
-            <tr>
+            <tr class="table-light">
                 <td>{{ pedido[0] }}</td>
                 <td>{{ pedido[1] }}</td>
                 <td>{{ pedido[2] }}</td>
-                <td>{{ pedido[3] }}</td>
-                <td>{{ pedido[4] }}</td>
-                <td><a href="{{url_for('verPedido', id=pedido[0])}}">Ver Pedido</a></td>
+                <td>${{ pedido[3] }}</td>
+
+                {% if pedido[4] == 'Pendiente': %}
+                <td><span class="badge rounded-pill bg-danger">{{ pedido[4] }}</span></td>
+                {% elif pedido[4] == 'En Producción': %}
+                <td><span class="badge rounded-pill bg-warning">{{ pedido[4] }}</span></td>
+                {% elif pedido[4] == 'Terminado': %}
+                <td><span class="badge rounded-pill bg-primary">{{ pedido[4] }}</span></td>
+                {% elif pedido[4] == 'Entregado': %}
+                <td><span class="badge rounded-pill bg-success">{{ pedido[4] }}</span></td>
+                {% else: %}
+                <td><span class="badge rounded-pill bg-dark">{{ pedido[4] }}</span></td>
+                {% endif %}
+
+                <td><a href="{{url_for('verPedido', id=pedido[0])}}" class="btn btn-primary btn-sm">Ver Pedido</a></td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
+    <!-- Este código muestra la una tabla con los pedidos registrados -->
 </div>
 
 {% endblock %}
