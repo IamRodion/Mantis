@@ -3,30 +3,44 @@
 
 {% block content %}
 
-<h1>Ver Pedido</h1>
-<table>
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Cliente</th>
-            <th scope="col">Fecha</th>
-            <th scope="col">Total</th>
-            <th scope="col">Estado</th>
-            <th scope="col">Pedido</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for pedido in pedidoDB %}
-        <tr>
-            <td>{{ pedido[0] }}</td>
-            <td>{{ pedido[1] }}</td>
-            <td>{{ pedido[2] }}</td>
-            <td>{{ pedido[3] }}</td>
-            <td>{{ pedido[4] }}</td>
-            <td>{{ pedido[5] }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div id="pagina">
+    <h1>Ver Pedido</h1>
+    <table class="table table-hover" id="tabla">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cliente</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Total</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Pedido</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pedido in pedidoDB %}
+            <tr class="table-light">
+                <td>{{ pedido[0] }}</td>
+                <td>{{ pedido[1] }}</td>
+                <td>{{ pedido[2] }}</td>
+                <td>${{ pedido[3] }}</td>
+
+                {% if pedido[4] == 'Pendiente': %}
+                <td><span class="badge rounded-pill bg-danger">{{ pedido[4] }}</span></td>
+                {% elif pedido[4] == 'En Producción': %}
+                <td><span class="badge rounded-pill bg-warning">{{ pedido[4] }}</span></td>
+                {% elif pedido[4] == 'Terminado': %}
+                <td><span class="badge rounded-pill bg-primary">{{ pedido[4] }}</span></td>
+                {% elif pedido[4] == 'Entregado': %}
+                <td><span class="badge rounded-pill bg-success">{{ pedido[4] }}</span></td>
+                {% else: %}
+                <td><span class="badge rounded-pill bg-dark">{{ pedido[4] }}</span></td>
+                {% endif %}
+
+                <td>{{ pedido[5] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 
 {% endblock %}
