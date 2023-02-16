@@ -4,6 +4,23 @@ body {
     color: white;
 }
 
+a{
+    text-decoration: none !important;
+}
+
+#vista-previa-estados{
+    max-width: 20%;
+    margin: 2%;
+}
+
+#pagina{
+    margin: 2%;
+}
+
+#tabla{
+    margin: 2%;
+    max-width: 70%;
+}
 
 /* -- Estilo para navbar 1  */
 
