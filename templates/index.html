@@ -2,10 +2,43 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<h1>Página Principal</h1>
-<p>{{ mensaje }}</p>
-<!-- <div>
-    <iframe src="https://www.zeitverschiebung.net/clock-widget-iframe-v2?language=es&size=medium&timezone=America%2FBogota" width="100%" height="115" frameborder="0" seamless></iframe>
-</div> -->
+
+<!-- Este código muestra mensajes en pantalla -->
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+{% if mensajes %}
+    {% for categoria, mensaje in mensajes %}
+        {% if categoria == 'Rojo' %}
+            <div class="alert alert-dismissible alert-danger">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{ mensaje[1] }}</strong>".</span>
+            </div>
+        {% endif %}
+        {% if categoria == 'Verde' %}
+            <div class="alert alert-dismissible alert-success">
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{ mensaje[1] }}</strong>".</span>
+            </div>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endwith %}
+<!-- Este código muestra mensajes en pantalla -->
+
+
+<div id="pagina">
+    <h1>Página Principal</h1>
+    
+    <!-- Este código muestra la cantidad de casos por cada estado -->
+    <div class="list-group" id="vista-previa-estados">
+        <a href="{{url_for('verEstado', estado=estados[2][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[2][0] }} <!--Pendiente-->
+            <span class="badge bg-danger rounded-pill">{{ estados[2][1] }}</span></a>
+        <a href="{{url_for('verEstado', estado=estados[0][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[0][0] }} <!--En Producción-->
+            <span class="badge bg-warning rounded-pill">{{ estados[0][1] }}</span></a>
+        <a href="{{url_for('verEstado', estado=estados[3][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[3][0] }} <!--Terminado-->
+            <span class="badge bg-primary rounded-pill">{{ estados[3][1] }}</span></a>
+        <a href="{{url_for('verEstado', estado=estados[1][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[1][0] }} <!--Entregado-->
+            <span class="badge bg-success rounded-pill">{{ estados[1][1] }}</span></a>
+    </div>
+    <!-- Este código muestra la cantidad de casos por cada estado -->
+
+</div>
 
 {% endblock %}
