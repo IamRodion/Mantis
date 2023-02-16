@@ -46,7 +46,7 @@ def crearPedido(): # Función que registra un pedido en la base de datos. Argume
     cliente = generarCliente() # Función que genera un nombre aleatorio 
     fecha = obtenerFecha() # Obteniendo fecha.
     total, pedido = generarPedido() #Función que genera un pedido aleatorio 
-    estado = 'Pendiente'
+    estado = random.choice(['Pendiente', 'En Producción', 'Terminado', 'Entregado'])
     query = f'INSERT INTO Pedidos ("cliente", "fecha", "total", "estado", "pedido") VALUES("{cliente}", "{fecha}", {total}, "{estado}", "{pedido}")' # Solicitud a realizar.
     cursor.execute(query) # Ejecutar una solicitud con el cursor.
     conn.commit() # Aplicar cambios.
@@ -83,5 +83,16 @@ def buscarPedido(dato): # Función para buscar un pedido por número de pedido o
 
     return pedidos # Devuelve los datos recibidos.    
 
-for i in range(30):
-    crearPedido()
+# for i in range(50):
+#     crearPedido()
+
+def mostrarEstado(): # Esta función cuenta la cantidad de pedidos por el estado en que están.
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    query = 'SELECT Estado, count(*) FROM "Pedidos" group by Estado' # Solicitud a realizar.
+    cursor.execute(query) # Ejecutar una solicitud con el cursor.
+    pedidos = cursor.fetchall() # Se vuelcan los datos en una variable.
+    conn.commit() # Aplicar cambios.
+    conn.close() # Cerrar conexión.
+    print(pedidos)
+
+mostrarEstado()
