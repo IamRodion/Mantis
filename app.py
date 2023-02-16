@@ -1,9 +1,10 @@
 #!/usr/bin/python3
-import os, time, json
+import time, json
 import sqlite3 as sql
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 
 app = Flask(__name__) # Nombre de la app de flask
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 database = 'db/CPB.db' # Ruta de la base de datos
 
 def crearCursor(database): # Genera un objeto cursor a traves de una base de datos.
@@ -21,19 +22,30 @@ def obtenerFecha(): # Función que devuelve la fecha.
     fecha = f'{time.strftime("%d/%m/%Y")} {time.strftime("%H:%M:%S")}' # Obteniendo fecha y hora.
     return fecha # Devolviendo fecha completa            
 
-@app.route('/') # Ruta principal.
-def index():
-    return render_template('index.html')
-
-@app.route('/pedidos') # Ruta de pedidos.
-def pedidos():
+def obtenerEstados(): # Función que obtienes los estados de los pedidos
     cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
-    query = 'SELECT * FROM Pedidos' # Solicitud a realizar.
+    query = 'SELECT Estado, count(*) FROM "Pedidos" group by Estado' # Solicitud a realizar.
     cursor.execute(query) # Ejecutar una solicitud con el cursor.
-    pedidosDB = cursor.fetchall() # Se vuelcan los datos en una variable.
+    estados = cursor.fetchall() # Se vuelcan los datos en una variable.
     conn.commit() # Aplicar cambios.
     conn.close() # Cerrar conexión.
-    return render_template('pedidos.html', pedidosDB=pedidosDB) # Devuelve la plantilla html y una variable con los pedidos.
+    return estados # Devuelve la cantidad de pedidos por estados
+
+@app.route('/', methods = ['GET']) # Ruta principal.
+def index():
+    if request.method == 'GET':
+        return render_template('index.html', estados=obtenerEstados())
+
+@app.route('/pedidos', methods = ['GET']) # Ruta de pedidos.
+def pedidos():
+    if request.method == 'GET':
+        cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+        query = 'SELECT * FROM Pedidos' # Solicitud a realizar.
+        cursor.execute(query) # Ejecutar una solicitud con el cursor.
+        pedidosDB = cursor.fetchall() # Se vuelcan los datos en una variable.
+        conn.commit() # Aplicar cambios.
+        conn.close() # Cerrar conexión.
+        return render_template('pedidos.html', pedidosDB=pedidosDB) # Devuelve la plantilla html y una variable con los pedidos.
 
 @app.route('/nuevo_pedido', methods = ['GET','POST']) # Recibe los datos llenados en el formato para crear pedidos y lo registra en la base de datos.
 def crearPedido(): # Función que registra un pedido en la base de datos. Argumentos necesarios: cliente=Nombre del cliente, total=total del coste de todas las ordenes, pedido=descripción de todas las ordenes.
@@ -50,7 +62,9 @@ def crearPedido(): # Función que registra un pedido en la base de datos. Argume
         cursor.execute(query) # Ejecutar una solicitud con el cursor.
         conn.commit() # Aplicar cambios.
         conn.close() # Cerrar conexión.
-        return redirect('/pedidos')
+
+        flash(['Se creó correctamente el pedido para el cliente', f'{cliente}'], 'Verde')
+        return redirect(url_for('pedidos'))
 
 @app.route('/ver_pedido/<id>')
 def verPedido(id):
@@ -77,7 +91,20 @@ def buscarPedido():
         conn.close() # Cerrar conexión
         return render_template('buscar_pedido.html', pedidosDB=pedidosDB, dato=dato)
     else:
-        return render_template('index.html', mensaje=f'No se encontraron pedidos con "{dato}"')
+        flash(['No se han encontrado pedidos con el valor ', f'{dato}'], 'Rojo')
+        return redirect(url_for('index'))
 
+@app.route('/ver_estado/<estado>')
+def verEstado(estado):
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    query = f'SELECT * FROM Pedidos WHERE estado = "{estado}"' # Solicitud a realizar.
+    cursor.execute(query) # Ejecutar una solicitud con el cursor.
+    pedidosDB = cursor.fetchall() # Se vuelcan los datos en una variable.
+    if pedidosDB:
+        conn.commit() # Aplicar cambios.
+        conn.close() # Cerrar conexión.
+        return render_template('pedidos.html', pedidosDB=pedidosDB)
+    else:
+        return render_template('index.html', mensaje='El id indicado no existe')
 
 app.run(debug=True) # Ejecutando programa en modo prueba.
