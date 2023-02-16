@@ -2,10 +2,28 @@
 {% extends "navbar.html" %}
 
 {% block content %}
-<h1>Nuevo Pedido</h1>
-<form action="/nuevo_pedido" method="post">
-    <label for="post-cliente">Cliente: </label><input id="post-cliente" type="text" name="cliente" required autofocus>
-    <label for="post-pedido">Pedido: </label><input id="post-cliente" type="text" name="pedido" required>
-    <input type="submit" value="Crear Pedido">
-</form>
+<div id="pagina">
+    <h1>Nuevo Pedido</h1>
+    <!-- <form action="/nuevo_pedido" method="post">
+        <label for="post-cliente">Cliente: </label>
+            <input id="post-cliente" type="text" name="cliente" required autofocus>
+        <label for="post-pedido">Pedido: </label>
+            <input id="post-pedido" type="text" name="pedido" required>
+
+        <input type="submit" value="Crear Pedido">
+    </form> -->
+
+    <div class="form-group" id="vista-previa-estados">
+        <form action="/nuevo_pedido" method="post">
+            <label for="post-cliente" class="form-label mt-4">Cliente </label>
+                <input id="post-cliente" type="text" name="cliente" required autofocus class="form-control"  placeholder="Nombre del Cliente">
+            <label for="post-pedido" class="form-label mt-4">Pedido </label>
+                <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control"  placeholder="Descripción del Pedido">
+            
+            <button type="submit" class="btn btn-primary form-label mt-4">Crear Pedido</button>
+        </form>
+    </div>
+
+</div>
+
 {% endblock %}
