@@ -3,16 +3,8 @@
 
 {% block content %}
 <div id="pagina">
-    <h1>Nuevo Pedido</h1>
-    <!-- <form action="/nuevo_pedido" method="post">
-        <label for="post-cliente">Cliente: </label>
-            <input id="post-cliente" type="text" name="cliente" required autofocus>
-        <label for="post-pedido">Pedido: </label>
-            <input id="post-pedido" type="text" name="pedido" required>
-
-        <input type="submit" value="Crear Pedido">
-    </form> -->
-
+    <h1>{{ datos['titulo'] }}</h1>
+    
     <div class="form-group" id="vista-previa-estados">
         <form action="/nuevo_pedido" method="post">
             <label for="post-cliente" class="form-label mt-4">Cliente </label>
