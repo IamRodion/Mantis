@@ -1,9 +1,13 @@
 #Programa para hacer pruebas con los datos en la base de datos
 
-import os, time, json, random
+import os, random, hashlib
 import sqlite3 as sql
+from faker import Faker
 
+#database = 'db/CPB.db'
 database = 'db/CPB.db'
+
+fake = Faker("es_CO")
 
 def crearCursor(database): # Genera un objeto cursor a traves de una base de datos.
     conn = None
@@ -16,42 +20,54 @@ def crearCursor(database): # Genera un objeto cursor a traves de una base de dat
             cursor = conn.cursor()
             return cursor, conn # Devuelve el objeto cursor y el objeto conn para cerrar la conexión a la base de datos al final
 
+def consultarQuery(query): # Función que realiza una consulta tomando como argumento una query SQL.
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    cursor.execute(query) # Ejecutar una solicitud con el cursor.
+    respuesta = cursor.fetchall() # Se vuelcan los datos en una variable.
+    conn.commit() # Aplicar cambios.
+    conn.close() # Cerrar conexión.
+    return respuesta # Se devuelven los datos recolectados.
+
 def limpiarPantalla(): # Función que limpia la pantalla.
     if os.name == 'posix': # Sí es un OS unix se ejecutará el comando "clear".
         os.system("clear")
     else: # En otros casos (windows), se ejecutará "cls".
         os.system("cls")
 
-def obtenerFecha(): # Función que devuelve la fecha.
-    fecha = f'{time.strftime("%d/%m/%Y")} {time.strftime("%H:%M:%S")}' # Obteniendo fecha y hora.
-    return fecha # Devolviendo fecha completa.
-
-def generarCliente():
-    nombres = ["María", "José", "Luis", "Luz", "Ana", "Carlos", "Juan", "Jorge", "Martha", "Sandra", "Gloria", "Blanca", "Rosa", "Carmen", "Pedro", "Jesús", "Claudia", "Diana", "Óscar", "Manuel"]
-    apellidos = ["Rodriguez", "Martinez", "Garcia", "Gomez", "Lopez", "Gonzalez", "Hernandez", "Sanchez", "Perez", "Ramirez", "Alvarez", "Torres", "Muñoz", "Rojas", "Moreno", "Vargas", "Ortiz", "Jimenez", "Castro", "Gutierrez"]
-    cliente = f'{random.choice(nombres)} {random.choice(apellidos)}'
-    return cliente
-
-def generarPedido():
+def generarOrden():
     productos = [["Juego de Cuellos Acrílico", 3800], ["Solo Cuello Acrílico", 2000], ["Solo Tira Acrílico", 2000], ["Juego de Cuello Letras", 5000], ["Cuello y Puño Letras", 6000], ["Solo Cuello Letras", 3500], ["Juego de Cuello Hilo", 4000], ["Solo Cuello Hilo", 2200], ["Juego Fajas Completo", 12000], ["Solo Faja Dobles", 6000], ["Cuello Redondo Doble", 4000]]
     producto = random.choice(productos)
-    cantidad = random.randint(1, 51)
-    totales = producto[1] * cantidad
+    cantidad = random.randint(30, 101)
+    precio = producto[1] * cantidad
+    prioridad = random.choice(['Alta', 'Media', 'Baja'])
     patron = 'O.verde.2-L.blanco.2-L.verde.2-F.blanco'
-    pedido = f'producto: {producto[0]}, cantidad: {cantidad}, total: {totales}, patrón: {patron}'
-    return totales, pedido
+    orden = [producto[0], cantidad, precio, prioridad, patron]
+    return orden
 
-def crearPedido(): # Función que registra un pedido en la base de datos. Argumentos necesarios: cliente=Nombre del cliente, total=total del coste de todas las ordenes, pedido=descripción de todas las ordenes.
-    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
-    cliente = generarCliente() # Función que genera un nombre aleatorio 
-    fecha = obtenerFecha() # Obteniendo fecha.
-    total, pedido = generarPedido() #Función que genera un pedido aleatorio 
+def generarPedido():
+    cliente = fake.name() # Función que genera un nombre aleatorio 
+    fecha = str(fake.date_time()) # Obteniendo fecha.
+    total = []
     estado = random.choice(['Pendiente', 'En Producción', 'Terminado', 'Entregado'])
-    query = f'INSERT INTO Pedidos ("cliente", "fecha", "total", "estado", "pedido") VALUES("{cliente}", "{fecha}", {total}, "{estado}", "{pedido}")' # Solicitud a realizar.
-    cursor.execute(query) # Ejecutar una solicitud con el cursor.
+    comentarios = fake.text()
+    ordenes = []
+    for _ in range(random.randint(1, 5)):
+        orden = generarOrden()
+        ordenes.append(orden)
+        total.append(orden[2])
+    pedido = [cliente, fecha, sum(total), estado, comentarios]
+    return pedido, ordenes
+
+def crearPedido(id): # Función que registra un pedido en la base de datos. Argumentos necesarios: cliente=Nombre del cliente, total=total del coste de todas las ordenes, pedido=descripción de todas las ordenes.
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    pedido, ordenes = generarPedido()
+    queryPedido = f'INSERT INTO Pedidos ("id", "cliente", "fecha", "total", "estado", "comentarios") VALUES ({id}, "{pedido[0]}", "{pedido[1]}", {pedido[2]}, "{pedido[3]}", "{pedido[4]}")'
+    cursor.execute(queryPedido) # Ejecutar una solicitud con el cursor.
+    for orden in ordenes:
+        queryOrden = f'INSERT INTO Ordenes ("id_Pedidos", "producto", "cantidad", "precio", "prioridad", "patron") VALUES ({id}, "{orden[0]}", {orden[1]}, {orden[2]}, "{orden[3]}", "{orden[4]}")'
+        cursor.execute(queryOrden) # Ejecutar una solicitud con el cursor.
     conn.commit() # Aplicar cambios.
     conn.close() # Cerrar conexión.
-    print(query)
 
 def verPedidos(): # Función que consulta los pedidos en la tabla "pedidos" de la base de datos.
     cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
@@ -80,11 +96,7 @@ def buscarPedido(dato): # Función para buscar un pedido por número de pedido o
     pedidos = cursor.fetchall() # Se vuelcan los datos en una variable.
     conn.commit() # Aplicar cambios.
     conn.close() # Cerrar conexión.
-
     return pedidos # Devuelve los datos recibidos.    
-
-# for i in range(50):
-#     crearPedido()
 
 def mostrarEstado(): # Esta función cuenta la cantidad de pedidos por el estado en que están.
     cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
@@ -95,4 +107,19 @@ def mostrarEstado(): # Esta función cuenta la cantidad de pedidos por el estado
     conn.close() # Cerrar conexión.
     print(pedidos)
 
-mostrarEstado()
+
+def verPedido(id):
+    pedido = consultarQuery(f'SELECT * FROM Pedidos WHERE id = {id}')
+    ordenes = consultarQuery(f'SELECT * FROM Ordenes WHERE id_Pedidos = {id}')
+    return pedido, ordenes
+
+def consultarUsuario(usuario, contraseña): # Función que revisa sí un usuario está en la base de datos.
+    contraseña = hashlib.sha256(contraseña).hexdigest()
+    query = f'SELECT * FROM Usuarios WHERE usuario="{usuario}" AND contraseña={contraseña}'
+    if consultarQuery(query):
+        return True
+    else:
+        return False
+
+for i in range(1, 201):
+    crearPedido(i)

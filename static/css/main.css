@@ -21,6 +21,15 @@ a{
     margin: 2%;
     max-width: 70%;
 }
+/* 
+#login{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    padding: 10%;
+} */
 
 /* -- Estilo para navbar 1  */
 

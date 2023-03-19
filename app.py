@@ -3,7 +3,7 @@
 # Programa creado por Rodion (github.com/IamRodion)
 
 # -------------Importando librerías-------------
-import time, json
+import time, hashlib
 import sqlite3 as sql
 from flask import Flask, render_template, request, redirect, url_for, flash
 
@@ -38,31 +38,65 @@ def consultarQuery(query): # Función que realiza una consulta tomando como argu
     conn.close() # Cerrar conexión.
     return respuesta # Se devuelven los datos recolectados.
 
-def obtenerEstados(): # Función que obtiene los pedidos agrupados por estado.
-    query = 'SELECT Estado, count(*) FROM Pedidos group by Estado' # Solicitud a realizar.
-    estados = consultarQuery(query) # Se vuelcan los datos en una variable.
+def consultarDato(query): # Función que realiza una consulta tomando como argumento una query SQL.
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    cursor.execute(query) # Ejecutar una solicitud con el cursor.
+    respuesta = cursor.fetchone() # Se vuelcan el dato en una variable.
+    conn.commit() # Aplicar cambios.
+    conn.close() # Cerrar conexión.
+    return respuesta # Se devuelven los datos recolectados.
+
+def obtenerEstados(): # Función que devuelve un diccionario con la cantidad de pedidos por estado.
+    estados = {
+        "Pendiente": 0,
+        "En Producción": 0,
+        "Terminado": 0,
+        "Entregado": 0
+    }
+    estados['Pendiente'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Pendiente"')[0]
+    estados['En Producción'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="En Producción"')[0]
+    estados['Terminado'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Terminado"')[0]
+    estados['Entregado'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Entregado"')[0]
+
     return estados # Devuelve la cantidad de pedidos por cada estado.
+
+def consultarUsuario(usuario, contraseña): # Función que revisa sí un usuario está en la base de datos.
+    query = f'SELECT * FROM Usuarios WHERE usuario="{usuario}" AND contraseña={contraseña}'
+    if consultarQuery(query):
+        return True
+    else:
+        return False
 
 
 # -------------Definiendo rutas-------------
 @app.route('/', methods = ['GET']) # Ruta principal.
 def index():
     if request.method == 'GET':
-        datos = {'titulo': 'CPB App'} # Datos a mostrar en la página.
-        return render_template('index.html', datos=datos, estados=obtenerEstados()) # Devuelve la plantilla de la página principal, junto la cantidad de pedidos por estado.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': 'CPB App',
+            'titulo': 'CPB App',
+            'estados': obtenerEstados()
+            }
+        return render_template('index.html', datos=datos) # Devuelve la plantilla de la página principal, junto la cantidad de pedidos por estado.
 
 @app.route('/pedidos', methods = ['GET']) # Ruta para ver los pedidos.
 def pedidos():
     if request.method == 'GET':
-        query = 'SELECT * FROM Pedidos' # Solicitud a realizar.
-        datos = {'titulo': 'Pedidos'} # Datos a mostrar en la página.
-        pedidosDB = consultarQuery(query) # Se vuelcan los datos en una variable.
-        return render_template('pedidos.html', datos=datos, pedidosDB=pedidosDB) # Devuelve la plantilla html y una variable con los pedidos.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': 'Pedidos',
+            'titulo': 'Pedidos',
+            'pedidos': consultarQuery('SELECT id, cliente, fecha, total, estado FROM Pedidos')
+            }
+
+        return render_template('pedidos.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
 
 @app.route('/nuevo_pedido', methods = ['GET','POST']) # Ruta que entrega la plantilla para crear un pedido (GET) y para enviar los datos del pedido nuevo a la base de datos (POST).
 def crearPedido():
     if request.method == 'GET': # Cuando se solicita la plantilla html para crear un pedido.
-        datos = {'titulo': 'Nuevo Pedido'} # Datos a mostrar en la página.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': 'Nuevo Pedido',
+            'titulo': 'Nuevo Pedido'
+            }
         return render_template('nuevo_pedido.html', datos=datos) # Devolver la plantilla que contiene el formulario a llenar.
     elif request.method == 'POST': # Cuando se está devolviendo la plantilla con los valores completados.
         cliente = request.form['cliente'] # Se obtiene el cliente indicado por el usuario en la plantilla.
@@ -78,11 +112,15 @@ def crearPedido():
 
 @app.route('/pedidos/<id>') # Ruta que muestra un pedido en específico.
 def verPedido(id): # El argumento es el id del caso a mostrar.
-    query = f'SELECT * FROM Pedidos WHERE id = {id}' # Solicitud a realizar.
-    pedidoDB = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
-    if pedidoDB: # Sí la consulta arroja resultados.
-        datos = {'titulo': f'Pedido #{id}'} # Datos a mostrar en la página.
-        return render_template('pedido.html', datos=datos, pedidoDB=pedidoDB) # Devuelve la plantilla html y una variable con el pedido.
+    pedido = consultarDato(f'SELECT * FROM Pedidos WHERE id = {id}') # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+    if pedido: # Sí la consulta arroja resultados.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': f'Pedido #{id}',
+            'titulo': f'Pedido #{id}',
+            'pedido': consultarDato(f'SELECT * FROM Pedidos WHERE id = {id}'),
+            'ordenes': consultarQuery(f'SELECT * FROM Ordenes WHERE id_Pedidos = {id}')
+            }
+        return render_template('pedido.html', datos=datos) # Devuelve la plantilla html y una variable con el pedido.
     else: # Sí la consulta no arroja resultados.
         flash(['No se encontraron pedidos con el #', f'{id}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
         return redirect(url_for('pedidos')) # Se redirige al usuario a la ruta '/pedidos'.
@@ -91,10 +129,14 @@ def verPedido(id): # El argumento es el id del caso a mostrar.
 def buscarPedido():
     buscar = request.form['buscar'] # Se obtiene el dato a buscar indicado por el usuario en la plantilla.
     query = f'SELECT * FROM Pedidos WHERE id like "%{buscar}%" OR cliente like "%{buscar}%"' # Solicitud a realizar.
-    pedidosDB = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
-    if pedidosDB: # Sí la consulta arroja resultados.
-        datos = {'titulo': f'Pedidos encontrados con "{buscar}"'} # Datos a mostrar en la página.
-        return render_template('pedidos.html', datos=datos, pedidosDB=pedidosDB) # Devuelve la plantilla html, una variable con el pedido y otra con el dato buscado.
+    pedidos = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+    if pedidos: # Sí la consulta arroja resultados.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': f'Buscar "{buscar}"',
+            'titulo': f'Pedidos encontrados con "{buscar}"',
+            'pedidos': consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+            }
+        return render_template('pedidos.html', datos=datos) # Devuelve la plantilla html, una variable con el pedido y otra con el dato buscado.
     else: # Sí la consulta no arroja resultados.
         flash(['No se han encontrado pedidos con el valor ', f'{buscar}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
         return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
@@ -102,12 +144,23 @@ def buscarPedido():
 @app.route('/estado/<estado>') # Ruta que muestra todos los pedidos que se encuentran en un estado indicado.
 def verEstado(estado):
     query = f'SELECT * FROM Pedidos WHERE estado = "{estado}"' # Solicitud a realizar.
-    pedidosDB = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
-    if pedidosDB: # Sí la consulta arroja resultados.
-        datos = {'titulo': f'Pedidos en estado "{estado}"'} # Datos a mostrar en la página.
-        return render_template('pedidos.html', datos=datos, pedidosDB=pedidosDB) # Devuelve la plantilla html y una variable con los pedidos.
+    pedidos = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+    if pedidos: # Sí la consulta arroja resultados.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': f'Estado "{estado}"',
+            'titulo': f'Pedidos en estado "{estado}"',
+            'pedidos': consultarQuery(query)
+            }
+        return render_template('pedidos.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
     else: # Sí la consulta no arroja resultados.
         flash(['No se han encontrado pedidos con el estado ', f'{estado}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
+        return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
+
+@app.route('/login')
+def login():
+    if request.method == 'GET': # Cuando se solicita la plantilla html para iniciar sesión.
+        return render_template('login.html')
+    elif request.method == 'POST': # Cuando se está devolviendo la plantilla con usuario y contraseña.
         return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
 
 app.run(debug=True) # Ejecutando programa en modo prueba.

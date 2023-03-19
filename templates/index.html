@@ -1,44 +1,54 @@
 <!-- En este documento va la página Principal, la barra de navegación ya está incluida -->
 {% extends "navbar.html" %}
 
+{% block title %}{{ datos['pestaña'] }}{% endblock %}
+
+
 {% block content %}
 
 <!-- Este código muestra mensajes en pantalla -->
 {% with mensajes = get_flashed_messages(with_categories=true) %}
 {% if mensajes %}
-    {% for categoria, mensaje in mensajes %}
-        {% if categoria == 'Rojo' %}
-            <div class="alert alert-dismissible alert-danger">
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{ mensaje[1] }}</strong>".</span>
-            </div>
-        {% endif %}
-        {% if categoria == 'Verde' %}
-            <div class="alert alert-dismissible alert-success">
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{ mensaje[1] }}</strong>".</span>
-            </div>
-        {% endif %}
-    {% endfor %}
+{% for categoria, mensaje in mensajes %}
+{% if categoria == 'Rojo' %}
+<div class="alert alert-dismissible alert-danger">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% if categoria == 'Verde' %}
+<div class="alert alert-dismissible alert-success">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% endfor %}
 {% endif %}
 {% endwith %}
-<!-- Este código muestra mensajes en pantalla -->
 
 
 <div id="pagina">
     <h1>{{ datos['titulo'] }}</h1>
-    
-    <!-- Este código muestra la cantidad de casos por cada estado -->
-    <div class="list-group" id="vista-previa-estados">
-        <a href="{{url_for('verEstado', estado=estados[2][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[2][0] }} <!--Pendiente-->
-            <span class="badge bg-danger rounded-pill">{{ estados[2][1] }}</span></a>
-        <a href="{{url_for('verEstado', estado=estados[0][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[0][0] }} <!--En Producción-->
-            <span class="badge bg-warning rounded-pill">{{ estados[0][1] }}</span></a>
-        <a href="{{url_for('verEstado', estado=estados[3][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[3][0] }} <!--Terminado-->
-            <span class="badge bg-primary rounded-pill">{{ estados[3][1] }}</span></a>
-        <a href="{{url_for('verEstado', estado=estados[1][0])}}" class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">{{ estados[1][0] }} <!--Entregado-->
-            <span class="badge bg-success rounded-pill">{{ estados[1][1] }}</span></a>
-    </div>
-    <!-- Este código muestra la cantidad de casos por cada estado -->
 
+    <!-- Este código muestra la cantidad de casos por cada estado -->
+    <div id="vista-previa-estados">
+        <div class="list-group">
+            <p class="text-center list-group-item justify-content-between align-items-center">Estados</p>
+            <a href="{{url_for('verEstado', estado='Pendiente')}}"
+                class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">Pendiente
+                <span class="badge bg-danger rounded-pill">{{ datos['estados']['Pendiente'] }}</span></a>
+            <a href="{{url_for('verEstado', estado='En Producción')}}"
+                class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">En Producción
+                <span class="badge bg-warning rounded-pill">{{ datos['estados']['En Producción'] }}</span></a>
+            <a href="{{url_for('verEstado', estado='Terminado')}}"
+                class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">Terminado
+                <span class="badge bg-primary rounded-pill">{{ datos['estados']['Terminado'] }}</span></a>
+            <a href="{{url_for('verEstado', estado='Entregado')}}"
+                class="d-flex justify-content-between align-items-center list-group-item list-group-item-action">Entregado
+                <span class="badge bg-success rounded-pill">{{ datos['estados']['Entregado'] }}</span></a>
+        </div>
+    </div>
+    
 </div>
 
 {% endblock %}

@@ -20,6 +20,42 @@ CREATE TABLE IF NOT EXISTS "Productos" ( -- Tabla que almacena productos y preci
 );
 
 
+-- Las tablas deberían ser creadas así
+CREATE TABLE IF NOT EXISTS "Pedidos" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"cliente"	TEXT NOT NULL,
+	"fecha"	TEXT NOT NULL,
+	"total"	NUMERIC NOT NULL DEFAULT 0,
+	"estado"	TEXT NOT NULL DEFAULT 'Pendiente',
+	"comentarios"	TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+INSERT INTO "Pedidos"(cliente, fecha, total , estado, comentarios) VALUES ("Gloria Alvarez", "14/02/2023 21:20:45", 219000, "Pendiente", "['Los juegos de cuello con letras hacerlo lo antes posíble', 'Las fajas háganlas por la noche']");
+
+
+CREATE TABLE IF NOT EXISTS "Ordenes" (
+	"id"	INTEGER NOT NULL UNIQUE,
+	"id_Pedidos"	INTEGER NOT NULL,
+	"producto"	TEXT NOT NULL,
+	"cantidad"	INTEGER NOT NULL,
+	"precio"	NUMERIC NOT NULL,
+	"prioridad" TEXT NOT NULL DEFAULT 'Baja',
+	"patron"	TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("id_Pedidos") REFERENCES "Pedidos"("id")
+);
+INSERT INTO "Ordenes"(id_Pedidos, producto, cantidad, precio, prioridad, patron) VALUES(1, "Juego de Cuello Letras", 27, 135000, "Alta", "O.verde.2-L.blanco.2-L.verde.2-F.blanco");
+INSERT INTO "Ordenes"(id_Pedidos, producto, cantidad, precio, prioridad, patron) VALUES(1, "Solo Faja Dobles", 14, 84000, "Baja", "O.rojo.2-L.blanco.2-L.rojo.2-F.blanco");
+
+
+-- y se puede visualizar así:
+SELECT * FROM Pedidos INNER JOIN Ordenes ON Pedidos.id = Ordenes.id_Pedidos;
+SELECT Pedidos.cliente, Pedidos.fecha, Pedidos.total, Pedidos.estado, Ordenes.producto, Ordenes.cantidad, Ordenes.precio, Ordenes.patron FROM Pedidos INNER JOIN Ordenes ON Pedidos.id = Ordenes.id_Pedidos;
+
+
+-- Tener en cuenta las subqueries
+
+
 --          Queries registrar datos en las tablas
 INSERT INTO "Usuarios" ("usuario", "contraseña") -- Registrar usuarios para la app.
 VALUES
