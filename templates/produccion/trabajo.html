@@ -1,0 +1,114 @@
+{% extends "produccion/base.html" %}
+{% block content %}
+
+{% include 'mensajes.html' %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    <div class="row mt-3">
+
+        <div class="col-sm-12 col-md-6 mt-3">
+            <h3>Ordenes <span class="badge rounded-pill bg-danger">Pendientes</span></h3>
+            <div class="table-responsive border border-info" style="max-height: 200px;">
+                <table class="table table-sm table-striped border-info align-middle">
+                    <thead>
+                        <tr class="table-info text-center" style="position: sticky; top: 0;">
+                            <th scope="col">#</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Prioridad</th>
+                            <th scope="col">Patrón</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for orden in datos['pendiente'] %}
+                        <tr>
+                            <td class="text-center">{{ orden[0] }}</td>
+                            <td class="text-center">{{ orden[2] }}</td>
+                            <td class="text-center">{{ orden[3] }}</td>
+
+                            {% if orden[6] == 'Alta': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-danger">{{ orden[6] }}</span></td>
+                            {% elif orden[6] == 'Media': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-warning">{{ orden[6] }}</span></td>
+                            {% elif orden[6] == 'Baja': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-success">{{ orden[6] }}</span></td>
+                            {% else: %}
+                            <td class="text-center"><span class="badge rounded-pill bg-dark">{{ orden[6] }}</span></td>
+                            {% endif %}
+
+                            <td class="text-center">
+                                <button class="btn btn-info btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ orden[0] }}" aria-controls="{{ orden[0] }}">Ver Patrón</button>
+                                <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ orden[0] }}" aria-labelledby="{{ orden[0] }}Label">
+                                    <div class="offcanvas-header bg-info text-white">
+                                        <h5 class="offcanvas-title" id="{{ orden[0] }}">Orden #{{ orden[0] }}</h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body fondo-oscuro text-white">
+                                        <div>{{ orden[7] }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-info mt-1">{{ datos['total_pendiente'] }} Ordenes <span class="badge rounded-pill bg-danger">Pendientes</span> encontradas.</p>
+        </div>
+
+
+        <div class="col-sm-12 col-md-6 mt-3">
+            <h3>Ordenes <span class="badge rounded-pill bg-warning">En Producción</span></h3>
+            <div class="table-responsive border border-info" style="max-height: 200px;">
+                <table class="table table-sm table-striped border-info align-middle">
+                    <thead>
+                        <tr class="table-info text-center" style="position: sticky; top: 0;">
+                            <th scope="col">#</th>
+                            <th scope="col">Producto</th>
+                            <th scope="col">Cantidad</th>
+                            <th scope="col">Prioridad</th>
+                            <th scope="col">Patrón</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for orden in datos['en_produccion'] %}
+                        <tr>
+                            <td class="text-center">{{ orden[0] }}</td>
+                            <td class="text-center">{{ orden[2] }}</td>
+                            <td class="text-center">{{ orden[3] }}</td>
+
+                            {% if orden[6] == 'Alta': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-danger">{{ orden[6] }}</span></td>
+                            {% elif orden[6] == 'Media': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-warning">{{ orden[6] }}</span></td>
+                            {% elif orden[6] == 'Baja': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-success">{{ orden[6] }}</span></td>
+                            {% else: %}
+                            <td class="text-center"><span class="badge rounded-pill bg-dark">{{ orden[6] }}</span></td>
+                            {% endif %}
+
+                            <td class="text-center">
+                                <button class="btn btn-info btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ orden[0] }}" aria-controls="{{ orden[0] }}">Ver Patrón</button>
+                                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="{{ orden[0] }}" aria-labelledby="{{ orden[0] }}Label">
+                                    <div class="offcanvas-header bg-info text-white">
+                                        <h5 class="offcanvas-title" id="{{ orden[0] }}">Orden #{{ orden[0] }}</h5>
+                                        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                                    </div>
+                                    <div class="offcanvas-body fondo-oscuro text-white">
+                                        <div>{{ orden[7] }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <p class="text-info mt-1">{{ datos['total_en_produccion'] }} Ordenes <span class="badge rounded-pill bg-warning">En Producción</span> encontradas.</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

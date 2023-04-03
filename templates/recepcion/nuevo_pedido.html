@@ -1,0 +1,47 @@
+{% extends "recepcion/base.html" %}
+{% block content %}
+
+<!-- Este código muestra mensajes en pantalla -->
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+{% if mensajes %}
+{% for categoria, mensaje in mensajes %}
+{% if categoria == 'Rojo' %}
+<div class="alert alert-dismissible alert-danger">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% if categoria == 'Verde' %}
+<div class="alert alert-dismissible alert-success">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    <div class="form-group col-sm-8 col-md-6 col-lg-4">
+        <form action="/nuevo_pedido" method="post">
+            <label for="post-cliente" class="form-label mt-4">Cliente</label>
+            <input id="post-cliente" type="text" name="cliente" required autofocus class="form-control" placeholder="Nombre del Cliente">
+            <label for="post-pedido" class="form-label mt-4">Pedido</label>
+            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Descripción del Pedido">
+            <label for="post-pedido" class="form-label mt-4">Comentarios</label>
+            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Comentarios del Pedido">
+            <label for="post-pedido" class="form-label mt-4">Producto</label>
+            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Producto">
+            <label for="post-pedido" class="form-label mt-4">Cantidad</label>
+            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Cantidad">
+            <label for="post-pedido" class="form-label mt-4">Prioridad</label>
+            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Prioridad">
+            <label for="post-pedido" class="form-label mt-4">Patrón</label>
+            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Patrón">
+            <button type="submit" class="btn btn-info form-label mt-4">Crear Pedido</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

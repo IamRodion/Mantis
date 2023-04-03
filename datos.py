@@ -39,22 +39,32 @@ def generarOrden():
     producto = random.choice(productos)
     cantidad = random.randint(30, 101)
     precio = producto[1] * cantidad
+    estado = random.choice(['Pendiente', 'En Producción', 'Terminado', 'Entregado'])
     prioridad = random.choice(['Alta', 'Media', 'Baja'])
     patron = 'O.verde.2-L.blanco.2-L.verde.2-F.blanco'
-    orden = [producto[0], cantidad, precio, prioridad, patron]
+    orden = [producto[0], cantidad, precio, estado, prioridad, patron]
     return orden
 
 def generarPedido():
     cliente = fake.name() # Función que genera un nombre aleatorio 
     fecha = str(fake.date_time()) # Obteniendo fecha.
     total = []
-    estado = random.choice(['Pendiente', 'En Producción', 'Terminado', 'Entregado'])
     comentarios = fake.text()
     ordenes = []
     for _ in range(random.randint(1, 5)):
         orden = generarOrden()
         ordenes.append(orden)
         total.append(orden[2])
+    
+    if [orden[3] for orden in ordenes].count('Pendiente') == len(ordenes):
+        estado = 'Pendiente'
+    elif [orden[3] for orden in ordenes].count('Terminado') == len(ordenes):
+        estado = 'Terminado'
+    elif [orden[3] for orden in ordenes].count('Entregado') == len(ordenes):
+        estado = 'Entregado'
+    else:
+        estado = 'En Producción'
+    
     pedido = [cliente, fecha, sum(total), estado, comentarios]
     return pedido, ordenes
 
@@ -62,9 +72,10 @@ def crearPedido(id): # Función que registra un pedido en la base de datos. Argu
     cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
     pedido, ordenes = generarPedido()
     queryPedido = f'INSERT INTO Pedidos ("id", "cliente", "fecha", "total", "estado", "comentarios") VALUES ({id}, "{pedido[0]}", "{pedido[1]}", {pedido[2]}, "{pedido[3]}", "{pedido[4]}")'
-    cursor.execute(queryPedido) # Ejecutar una solicitud con el cursor.
+    #queryID = f'SELECT max(id) FROM Pedidos'
+    cursor.execute(queryPedido)# Ejecutar una solicitud con el cursor.
     for orden in ordenes:
-        queryOrden = f'INSERT INTO Ordenes ("id_Pedidos", "producto", "cantidad", "precio", "prioridad", "patron") VALUES ({id}, "{orden[0]}", {orden[1]}, {orden[2]}, "{orden[3]}", "{orden[4]}")'
+        queryOrden = f'INSERT INTO Ordenes ("id_Pedidos", "producto", "cantidad", "precio", "estado", "prioridad", "patron") VALUES ({id}, "{orden[0]}", {orden[1]}, {orden[2]}, "{orden[3]}", "{orden[4]}", "{orden[5]}")'
         cursor.execute(queryOrden) # Ejecutar una solicitud con el cursor.
     conn.commit() # Aplicar cambios.
     conn.close() # Cerrar conexión.

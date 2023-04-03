@@ -1,0 +1,14 @@
+{% extends "administracion/base.html" %}
+{% block content %}
+
+<!-- Este código muestra mensajes en pantalla -->
+{% include 'mensajes.html' %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    <p class="col-sm-12 col-md-6 col-lg-6 text-white">En el área de {{ datos['titulo']}} se pueden
+        borrar y modificar pedidos, ordenes, facturas, cambiar contraseñas y más.</p>
+</div>
+
+
+{% endblock %}

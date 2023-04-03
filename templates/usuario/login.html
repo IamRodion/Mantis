@@ -1,0 +1,58 @@
+<!-- En este documento va el inicio de sesión -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar Sesión</title>
+  <link rel="icon" href="/static/Image/Mantis icon 1.svg" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+</head>
+
+<body>
+  <section class="vh-100 gradient-custom">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card text-white fondo-medio" style="border-radius: 1rem;">
+            <div class="card-body p-5 text-center">
+              <div class="mb-md-4 mt-md-2">
+
+                <h2 class="fw-bold mb-2">Mantis</h2>
+                <span class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                  <img src="/static/Image/Mantis icon 3.svg" class="bi d-block mx-auto mb-1" alt="App Logo" width="50"
+                    height="50">
+                </span>
+
+                <div class="form-group text-info mt-3">
+                  <form action="/">
+                    <div class="form-floating mb-3">
+                      <input type="user" class="form-control texto-oscuro" id="floatingInput" placeholder="Usuario" autofocus
+                        required>
+                      <label for="floatingInput">Usuario</label>
+                    </div>
+                    <div class="form-floating">
+                      <input type="password" class="form-control texto-oscuro" id="floatingPassword" placeholder="Contraseña"
+                        required>
+                      <label for="floatingPassword">Contraseña</label>
+                    </div>
+                    <div>
+                      <button type="submit" class="btn btn-info form-label mt-4">Iniciar Sesión</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <script src="/static/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

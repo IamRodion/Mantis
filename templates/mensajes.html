@@ -1,0 +1,21 @@
+<!-- Este código muestra mensajes en pantalla -->
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+{% if mensajes %}
+{% for categoria, mensaje in mensajes %}
+{% if categoria == 'Rojo' %}
+
+<div class="alert alert-dismissible alert-danger">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+
+{% endif %}
+{% if categoria == 'Verde' %}
+<div class="alert alert-dismissible alert-success">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endwith %}

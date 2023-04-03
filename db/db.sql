@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS "Ordenes" (
 	"producto"	TEXT NOT NULL,
 	"cantidad"	INTEGER NOT NULL,
 	"precio"	NUMERIC NOT NULL,
+    "estado"	TEXT NOT NULL DEFAULT 'Pendiente',
 	"prioridad" TEXT NOT NULL DEFAULT 'Baja',
 	"patron"	TEXT NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT),

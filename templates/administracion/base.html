@@ -1,0 +1,34 @@
+{% extends "navbar.html" %}
+{% block title %}{{ datos['pestaña'] }}{% endblock %}
+
+{% block navbar%}
+<nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+        <a class="navbar-brand text-white" href="/administracion">Administración</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor03"
+            aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor03">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Opción 1</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Opción 2</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">Opción 3</a>
+                </li>
+            </ul>
+            <form class="d-flex" action="/buscar_pedido" method="post">
+                <input class="form-control me-sm-2" id="POST-name" type="integer" name="buscar" placeholder="# de Pedido o Cliente" required>
+                <button class="btn btn-info my-2 my-sm-0" type="submit" value="Buscar">Buscar</button>
+            </form>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+{% endblock %}

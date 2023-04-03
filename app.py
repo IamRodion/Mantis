@@ -11,7 +11,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 # -------------Definiendo objetos, atributos y variables-------------
 app = Flask(__name__) # Nombre de la app de flask.
 app.secret_key = 'sj8rnNeCUDy6ZD7' # Clave secreta para el correcto funcionamiento de la función flash. En caso de borrarla generará el error "RuntimeError: The session is unavailable because no secret key was set. Set the secret_key on the application to something unique and secret".
-database = 'db/CPB.db' # Ruta de la base de datos.
+database = 'db/Mantis.db' # Ruta de la base de datos.
 
 
 # -------------Definiendo funciones-------------
@@ -46,19 +46,65 @@ def consultarDato(query): # Función que realiza una consulta tomando como argum
     conn.close() # Cerrar conexión.
     return respuesta # Se devuelven los datos recolectados.
 
-def obtenerEstados(): # Función que devuelve un diccionario con la cantidad de pedidos por estado.
-    estados = {
-        "Pendiente": 0,
-        "En Producción": 0,
-        "Terminado": 0,
-        "Entregado": 0
-    }
-    estados['Pendiente'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Pendiente"')[0]
-    estados['En Producción'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="En Producción"')[0]
-    estados['Terminado'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Terminado"')[0]
-    estados['Entregado'] = consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Entregado"')[0]
+def consultarPorcentaje(tabla, columna, consulta):
+    cantidad = consultarDato(f'SELECT IFNULL(COUNT(*), 0) FROM {tabla} WHERE {columna}="{consulta}"')[0]
+    total = consultarDato(f'SELECT IFNULL(COUNT(*), 0) FROM {tabla}')[0]
 
-    return estados # Devuelve la cantidad de pedidos por cada estado.
+    if cantidad == 0:
+        return 0
+    else:
+        porcentaje = cantidad * 100 / total
+        return round(porcentaje, 1)
+
+
+def obtenerPedidos(): # Función que devuelve un diccionario con la cantidad de pedidos por estado.
+    pedidos = {
+        "Total": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos')[0],
+
+        "Pendiente": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Pendiente"')[0],
+        "En Producción": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="En Producción"')[0],
+        "Terminado": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Terminado"')[0],
+        "Entregado": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE estado="Entregado"')[0],
+
+        "Porcentaje Pendiente": consultarPorcentaje("Pedidos", "estado", "Pendiente"),
+        "Porcentaje En Producción": consultarPorcentaje("Pedidos", "estado", "En Producción"),
+        "Porcentaje Terminado": consultarPorcentaje("Pedidos", "estado", "Terminado"),
+        "Porcentaje Entregado": consultarPorcentaje("Pedidos", "estado", "Entregado"),
+        #"PorcentajePendiente": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="Pendiente"')[0],
+        #"PorcentajeEnProducción": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="En Producción"')[0],
+        #"PorcentajeTerminado": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="Terminado"')[0],
+        #"PorcentajeEntregado": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="Entregado"')[0]
+    }
+
+    return pedidos
+
+def obtenerOrdenes(): # Función que devuelve un diccionario con la cantidad de ordenes por prioridad.
+    ordenes = {
+        "Total": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes')[0],
+
+        "Pendiente": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE estado="Pendiente"')[0],
+        "En Producción": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE estado="En Producción"')[0],
+        "Terminado": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE estado="Terminado"')[0],
+        "Entregado": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE estado="Entregado"')[0],
+        "Porcentaje Pendiente": consultarPorcentaje("Ordenes", "estado", "Pendiente"),
+        "Porcentaje En Producción": consultarPorcentaje("Ordenes", "estado", "En Producción"),
+        "Porcentaje Terminado": consultarPorcentaje("Ordenes", "estado", "Terminado"),
+        "Porcentaje Entregado": consultarPorcentaje("Ordenes", "estado", "Entregado"),
+
+
+        "Alta": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE prioridad="Alta"')[0],
+        "Media": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE prioridad="Media"')[0],
+        "Baja": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE prioridad="Baja"')[0],
+        "Porcentaje Alta": consultarPorcentaje("Ordenes", "prioridad", "Alta"),
+        "Porcentaje Media": consultarPorcentaje("Ordenes", "prioridad", "Media"),
+        "Porcentaje Baja": consultarPorcentaje("Ordenes", "prioridad", "Baja")
+
+        #"PorcentajeAlta": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT COUNT(*) FROM Ordenes) FROM Ordenes WHERE prioridad="Alta"')[0],
+        #"PorcentajeMedia": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT COUNT(*) FROM Ordenes) FROM Ordenes WHERE prioridad="Media"')[0],
+        #"PorcentajeBaja": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT COUNT(*) FROM Ordenes) FROM Ordenes WHERE prioridad="Baja"')[0]
+    }
+
+    return ordenes
 
 def consultarUsuario(usuario, contraseña): # Función que revisa sí un usuario está en la base de datos.
     query = f'SELECT * FROM Usuarios WHERE usuario="{usuario}" AND contraseña={contraseña}'
@@ -68,27 +114,86 @@ def consultarUsuario(usuario, contraseña): # Función que revisa sí un usuario
         return False
 
 
-# -------------Definiendo rutas-------------
-@app.route('/', methods = ['GET']) # Ruta principal.
+# -------------Definiendo rutas principales-------------
+@app.route('/') # Ruta principal.
 def index():
-    if request.method == 'GET':
-        datos = { # Datos a mostrar en la página.
-            'pestaña': 'CPB App',
-            'titulo': 'CPB App',
-            'estados': obtenerEstados()
-            }
-        return render_template('index.html', datos=datos) # Devuelve la plantilla de la página principal, junto la cantidad de pedidos por estado.
+    datos = { # Datos a mostrar en la página.
+        'pestaña': 'Mantis',
+        'titulo': 'Mantis'
+        }
+    return render_template('pagina_principal/pagina_principal.html', datos=datos) # Devuelve la plantilla de la página principal, junto la cantidad de pedidos por estado.
 
-@app.route('/pedidos', methods = ['GET']) # Ruta para ver los pedidos.
+@app.route('/recepcion')
+def recepcion():
+    datos = {
+        'pestaña': 'Recepción',
+        'titulo': 'Recepción'
+    }
+    return render_template('recepcion/recepcion.html', datos=datos)
+
+@app.route('/produccion')
+def produccion():
+    datos = {
+        'pestaña': 'Producción',
+        'titulo': 'Producción'
+    }
+    return render_template('produccion/produccion.html', datos=datos)
+
+@app.route('/administracion')
+def administracion():
+    datos = {
+        'pestaña': 'Administración',
+        'titulo': 'Administración'
+    }
+    return render_template('administracion/administracion.html', datos=datos)
+
+@app.route('/usuario')
+def usuario():
+    datos = {
+        'pestaña': 'Usuario',
+        'titulo': 'Usuario'
+    }
+    return render_template('usuario/usuario.html', datos=datos)
+
+# -------------Definiendo rutas secundarias-------------
+@app.route('/estadisticas') # Ruta principal.
+def estadisticas():
+    datos = { # Datos a mostrar en la página.
+        'pestaña': 'Estadísticas',
+        'titulo': 'Estadísticas',
+        'pedidos': obtenerPedidos(),
+        'ordenes': obtenerOrdenes()
+        }
+    return render_template('pagina_principal/estadisticas.html', datos=datos) # Devuelve la plantilla de la página principal, junto la cantidad de pedidos por estado.
+
+@app.route('/acerca_de') # Ruta principal.
+def acercaDe():
+    datos = { # Datos a mostrar en la página.
+        'pestaña': 'Acerca De',
+        'titulo': 'Acerca De'
+        }
+    return render_template('pagina_principal/acerca_de.html', datos=datos) # Devuelve la plantilla de la página principal, junto la cantidad de pedidos por estado.
+
+
+@app.route('/pedidos') # Ruta para ver los pedidos.
 def pedidos():
-    if request.method == 'GET':
-        datos = { # Datos a mostrar en la página.
-            'pestaña': 'Pedidos',
-            'titulo': 'Pedidos',
-            'pedidos': consultarQuery('SELECT id, cliente, fecha, total, estado FROM Pedidos')
-            }
+    datos = { # Datos a mostrar en la página.
+        'pestaña': 'Pedidos',
+        'titulo': 'Pedidos',
+        'pedidos': consultarQuery('SELECT id, cliente, fecha, total, estado FROM Pedidos'),
+        "total": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Pedidos')[0]
+        }
+    return render_template('recepcion/pedidos.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
 
-        return render_template('pedidos.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
+@app.route('/ordenes') # Ruta para ver las ordenes.
+def ordenes():
+    datos = { # Datos a mostrar en la página.
+        'pestaña': 'Ordenes',
+        'titulo': 'Ordenes',
+        'ordenes': consultarQuery('SELECT id, id_Pedidos, producto, cantidad, precio, estado, prioridad, patron FROM Ordenes'),
+        "total": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes')[0]
+        }
+    return render_template('recepcion/ordenes.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
 
 @app.route('/nuevo_pedido', methods = ['GET','POST']) # Ruta que entrega la plantilla para crear un pedido (GET) y para enviar los datos del pedido nuevo a la base de datos (POST).
 def crearPedido():
@@ -97,7 +202,7 @@ def crearPedido():
             'pestaña': 'Nuevo Pedido',
             'titulo': 'Nuevo Pedido'
             }
-        return render_template('nuevo_pedido.html', datos=datos) # Devolver la plantilla que contiene el formulario a llenar.
+        return render_template('recepcion/nuevo_pedido.html', datos=datos) # Devolver la plantilla que contiene el formulario a llenar.
     elif request.method == 'POST': # Cuando se está devolviendo la plantilla con los valores completados.
         cliente = request.form['cliente'] # Se obtiene el cliente indicado por el usuario en la plantilla.
         fecha = obtenerFecha() # Obteniendo fecha y hora del momento en que se realiza el registro.
@@ -117,10 +222,10 @@ def verPedido(id): # El argumento es el id del caso a mostrar.
         datos = { # Datos a mostrar en la página.
             'pestaña': f'Pedido #{id}',
             'titulo': f'Pedido #{id}',
-            'pedido': consultarDato(f'SELECT * FROM Pedidos WHERE id = {id}'),
-            'ordenes': consultarQuery(f'SELECT * FROM Ordenes WHERE id_Pedidos = {id}')
+            'pedido': consultarDato(f'SELECT id, cliente, fecha, total, estado, comentarios FROM Pedidos WHERE id = {id}'),
+            'ordenes': consultarQuery(f'SELECT id, producto, cantidad, precio, estado, prioridad, patron FROM Ordenes WHERE id_Pedidos = {id}')
             }
-        return render_template('pedido.html', datos=datos) # Devuelve la plantilla html y una variable con el pedido.
+        return render_template('recepcion/pedido.html', datos=datos) # Devuelve la plantilla html y una variable con el pedido.
     else: # Sí la consulta no arroja resultados.
         flash(['No se encontraron pedidos con el #', f'{id}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
         return redirect(url_for('pedidos')) # Se redirige al usuario a la ruta '/pedidos'.
@@ -134,33 +239,104 @@ def buscarPedido():
         datos = { # Datos a mostrar en la página.
             'pestaña': f'Buscar "{buscar}"',
             'titulo': f'Pedidos encontrados con "{buscar}"',
-            'pedidos': consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+            'pedidos': consultarQuery(query), # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+            'total': consultarDato(f'SELECT IFNULL(COUNT(*), 0) FROM Pedidos WHERE id like "%{buscar}%" OR cliente like "%{buscar}%"')[0]
             }
-        return render_template('pedidos.html', datos=datos) # Devuelve la plantilla html, una variable con el pedido y otra con el dato buscado.
+        return render_template('recepcion/pedidos.html', datos=datos) # Devuelve la plantilla html, una variable con el pedido y otra con el dato buscado.
     else: # Sí la consulta no arroja resultados.
         flash(['No se han encontrado pedidos con el valor ', f'{buscar}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
         return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
 
-@app.route('/estado/<estado>') # Ruta que muestra todos los pedidos que se encuentran en un estado indicado.
-def verEstado(estado):
+@app.route('/pedidos/estado/<estado>') # Ruta que muestra todos los pedidos que se encuentran en un estado indicado.
+def verPedidosEstado(estado):
     query = f'SELECT * FROM Pedidos WHERE estado = "{estado}"' # Solicitud a realizar.
     pedidos = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
     if pedidos: # Sí la consulta arroja resultados.
         datos = { # Datos a mostrar en la página.
-            'pestaña': f'Estado "{estado}"',
+            'pestaña': f'Pedidos "{estado}"',
             'titulo': f'Pedidos en estado "{estado}"',
-            'pedidos': consultarQuery(query)
+            'pedidos': pedidos,
+            "total": len(pedidos)
             }
-        return render_template('pedidos.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
+        return render_template('recepcion/pedidos.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
     else: # Sí la consulta no arroja resultados.
         flash(['No se han encontrado pedidos con el estado ', f'{estado}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
         return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
 
+@app.route('/ordenes/prioridad/<prioridad>')
+def verOrdenesPrioridad(prioridad):
+    query = f'SELECT id, id_Pedidos, producto, cantidad, precio, estado, prioridad, patron FROM Ordenes WHERE prioridad = "{prioridad}"' # Solicitud a realizar.
+    ordenes = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+    if ordenes: # Sí la consulta arroja resultados.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': f'Prioridad "{prioridad}"',
+            'titulo': f'Ordenes con Prioridad "{prioridad}"',
+            'ordenes': ordenes,
+            "total": len(ordenes)
+            }
+        return render_template('recepcion/ordenes.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
+    else: # Sí la consulta no arroja resultados.
+        flash(['No se han encontrado ordenes con la prioridad ', f'{prioridad}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
+        return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
+
+@app.route('/ordenes/estado/<estado>')
+def verOrdenesEstado(estado):
+    query = f'SELECT id, id_Pedidos, producto, cantidad, precio, estado, prioridad, patron FROM Ordenes WHERE estado = "{estado}"' # Solicitud a realizar.
+    ordenes = consultarQuery(query) # Ejecutar una solicitud SQL, guardar el resultado en una variable.
+    if ordenes: # Sí la consulta arroja resultados.
+        datos = { # Datos a mostrar en la página.
+            'pestaña': f'Ordenes "{estado}"',
+            'titulo': f'Ordenes en estado "{estado}"',
+            'ordenes': ordenes,
+            "total": len(ordenes)
+            }
+        return render_template('recepcion/ordenes.html', datos=datos) # Devuelve la plantilla html y una variable con los pedidos.
+    else: # Sí la consulta no arroja resultados.
+        flash(['No se han encontrado ordenes con el estado ', f'{estado}'], 'Rojo') # Se envía un mensaje, la categoría del mensaje y un dato a la próxima página en mostrarse.
+        return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
+
+@app.route('/productos')
+def productos():
+    query = 'SELECT * FROM Productos'
+    productos = consultarQuery(query)
+    if productos:
+        datos = {
+            'pestaña': 'Productos',
+            'titulo': 'Productos',
+            'productos': productos
+        }
+        return render_template('recepcion/productos.html', datos=datos)
+    else:
+        flash(['No se han encontrado productos registrados'], 'Rojo')
+        return redirect(url_for('recepcion'))
+
+@app.route('/trabajo')
+def trabajo():
+    datos = {
+        'pestaña': 'Área de Trabajo',
+        'titulo': 'Área de Trabajo',
+        'pendiente': consultarQuery('SELECT id, id_Pedidos, producto, cantidad, precio, estado, prioridad, patron, CASE prioridad WHEN "Alta" THEN "A" WHEN "Media" THEN "B" WHEN "Baja" THEN "C" ELSE "D" END categoria FROM Ordenes WHERE estado="Pendiente" ORDER BY categoria'),
+        "total_pendiente": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE estado="Pendiente"')[0],
+        'en_produccion': consultarQuery('SELECT id, id_Pedidos, producto, cantidad, precio, estado, prioridad, patron, CASE prioridad WHEN "Alta" THEN "A" WHEN "Media" THEN "B" WHEN "Baja" THEN "C" ELSE "D" END categoria FROM Ordenes WHERE estado="En Producción" ORDER BY categoria'),
+        "total_en_produccion": consultarDato('SELECT IFNULL(COUNT(*), 0) FROM Ordenes WHERE estado="En Producción"')[0],
+    }
+    return render_template('produccion/trabajo.html', datos=datos)
+
 @app.route('/login')
 def login():
     if request.method == 'GET': # Cuando se solicita la plantilla html para iniciar sesión.
-        return render_template('login.html')
+        return render_template('usuario/login.html')
     elif request.method == 'POST': # Cuando se está devolviendo la plantilla con usuario y contraseña.
         return redirect(url_for('index')) # Se redirige al usuario a la ruta '/'.
 
-app.run(debug=True) # Ejecutando programa en modo prueba.
+@app.errorhandler(404)
+def page_not_found(e):
+    datos = {
+            'pestaña': 'Error',
+            'titulo': 'Ha Ocurrido Un Error'
+        }
+    return render_template('errores/404.html', datos=datos), 404
+    # flash(['La página que buscas no existe'], 'Rojo')
+    # return redirect(url_for('index'))
+
+app.run(debug=True, host='0.0.0.0', port=8000) # Ejecutando programa en modo prueba.

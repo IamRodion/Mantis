@@ -1,5 +1,5 @@
 <div align="center">
-<img style="width: 60px;" src="static/Image/Mantis Purpura y Verde.svg"/>
+<img style="width: 200px;" src="static/Image/Mantis Purpura y Verde.svg"/>
 </div>
 
 # Mantis

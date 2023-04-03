@@ -1,0 +1,64 @@
+{% extends "recepcion/base.html" %}
+{% block content %}
+
+{% include 'mensajes.html' %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+
+    <!-- Este código muestra la una tabla con los pedidos registrados -->
+    <div class="table-responsive">
+        <table class="table table-striped border border-info align-middle caption-top">
+            <caption class="text-info">{{ datos['total'] }} ordenes encontradas</caption>
+            <thead>
+                <tr class="table-info text-center">
+                    <th scope="col">#</th>
+                    <th scope="col">Producto</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Prioridad</th>
+                    <th scope="col">Patron</th>
+                    <th scope="col">Pedido</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for orden in datos['ordenes'] %}
+                <tr>
+                    <td class="text-center">{{ orden[0] }}</td>
+                    <td class="text-center">{{ orden[2] }}</td>
+                    <td class="text-end">{{ orden[3] }}</td>
+                    <td class="text-end">{{ orden[4] }}</td>
+                    
+                    {% if orden[5] == 'Pendiente': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-danger">{{ orden[5] }}</span></td>
+                    {% elif orden[5] == 'En Producción': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-warning">{{ orden[5] }}</span></td>
+                    {% elif orden[5] == 'Terminado': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-primary">{{ orden[5] }}</span></td>
+                    {% elif orden[5] == 'Entregado': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-success">{{ orden[5] }}</span></td>
+                    {% else: %}
+                    <td class="text-center"><span class="badge rounded-pill bg-dark">{{ orden[5] }}</span></td>
+                    {% endif %}
+
+                    {% if orden[6] == 'Alta': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-danger">{{ orden[6] }}</span></td>
+                    {% elif orden[6] == 'Media': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-warning">{{ orden[6] }}</span></td>
+                    {% elif orden[6] == 'Baja': %}
+                    <td class="text-center"><span class="badge rounded-pill bg-success">{{ orden[6] }}</span></td>
+                    {% else: %}
+                    <td class="text-center"><span class="badge rounded-pill bg-dark">{{ orden[6] }}</span></td>
+                    {% endif %}
+
+                    <td class="text-center">{{ orden[7] }}</td>
+                    <td class="text-center"><a href="{{url_for('verPedido', id=orden[1])}}" class="btn btn-info btn-sm">Ver Pedido</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

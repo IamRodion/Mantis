@@ -1,0 +1,96 @@
+{% extends "recepcion/base.html" %}
+{% block content %}
+
+<!-- Este código muestra mensajes en pantalla -->
+{% with mensajes = get_flashed_messages(with_categories=true) %}
+{% if mensajes %}
+{% for categoria, mensaje in mensajes %}
+{% if categoria == 'Rojo' %}
+<div class="alert alert-dismissible alert-danger">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% if categoria == 'Verde' %}
+<div class="alert alert-dismissible alert-success">
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
+            mensaje[1] }}</strong>".</span>
+</div>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+
+    <div class="row align-items-center">
+        <div class="col">
+            <!-- Este código muestra la una tabla con los pedidos registrados -->
+            <div class="table-responsive">
+                <table class="table table-striped border border-info align-middle caption-top">
+                    <caption class="text-info">{{ datos['total'] }} pedidos encontrados</caption>
+                    <thead>
+                        <tr class="table-info text-center">
+                            <th scope="col">#</th>
+                            <th scope="col">Cliente</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Estado</th>
+                            <th scope="col">Pedido</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pedido in datos['pedidos'] %}
+                        <tr>
+                            <td class="text-center">{{ pedido[0] }}</td>
+                            <td class="text-center">{{ pedido[1] }}</td>
+                            <td class="text-center">{{ pedido[2] }}</td>
+                            <td class="text-end">{{ pedido[3] }}</td>
+                            
+                            {% if pedido[4] == 'Pendiente': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-danger">{{ pedido[4] }}</span></td>
+                            {% elif pedido[4] == 'En Producción': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-warning">{{ pedido[4] }}</span></td>
+                            {% elif pedido[4] == 'Terminado': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-primary">{{ pedido[4] }}</span></td>
+                            {% elif pedido[4] == 'Entregado': %}
+                            <td class="text-center"><span class="badge rounded-pill bg-success">{{ pedido[4] }}</span></td>
+                            {% else: %}
+                            <td class="text-center"><span class="badge rounded-pill bg-dark">{{ pedido[4] }}</span></td>
+                            {% endif %}
+            
+                            <td class="text-center"><a href="{{url_for('verPedido', id=pedido[0])}}" class="btn btn-info btn-sm">Ver Pedido</a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- <div>
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item">
+                            <a class="page-link" href="#">&laquo;</a>
+                        </li>
+
+                        {% for pagina in datos['pedidos'] if pagina[0] % 25 == 0%}
+
+                        <li class="page-item">
+                            <a class="page-link" href="{{url_for('verPedido', id=pagina[0])}}">{{ pagina[0] }}</a>
+                        </li>
+
+                        {% endfor %}
+
+                        <li class="page-item">
+                            <a class="page-link" href="#">&raquo;</a>
+                        </li>
+                    </ul>
+                </div> -->
+            </div>
+        </div>
+    </div>
+
+    
+
+</div>
+
+{% endblock %}

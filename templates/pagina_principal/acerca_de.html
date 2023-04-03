@@ -1,0 +1,19 @@
+{% extends "pagina_principal/base.html" %}
+{% block content %}
+
+{% include 'mensajes.html' %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    
+    <div class="card border-info mb-3" style="max-width: 20rem;">
+        <div class="card-header">Creado por <a class="text-info" href="https://github.com/IamRodion">IamRodion</a></div>
+        <div class="card-body">
+          <h4 class="card-title">CPB App</h4>
+          <p class="card-text">WebApp para la gestión de pedidos, creado con python3, flask, sqlite3, bootstrap5 y mingcute.</p>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

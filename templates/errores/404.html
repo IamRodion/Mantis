@@ -1,0 +1,11 @@
+{% extends "pagina_principal/base.html" %}
+{% block content %}
+
+{% include 'mensajes.html' %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    <p class="text-white">La página que estás buscando <span class="text-danger">no existe</span>.</p>
+</div>
+
+{% endblock %}

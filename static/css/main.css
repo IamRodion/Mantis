@@ -1,71 +1,143 @@
 body {
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: black;
-    color: white;
+  background-color: #190822 !important;
+  color: white;
 }
 
-a{
-    text-decoration: none !important;
+a {
+  text-decoration: none !important;
 }
 
-#vista-previa-estados{
-    max-width: 20%;
-    margin: 2%;
+.bd-placeholder-img {
+  font-size: 1.125rem;
+  text-anchor: middle;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
-#pagina{
-    margin: 2%;
+@media (min-width: 768px) {
+  .bd-placeholder-img-lg {
+    font-size: 3.5rem;
+  }
 }
 
-#tabla{
-    margin: 2%;
-    max-width: 70%;
-}
-/* 
-#login{
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    flex-direction: row;
-    padding: 10%;
-} */
-
-/* -- Estilo para navbar 1  */
-
-
-/* ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #333;
-    display: flex;
-    
+.b-example-divider {
+  height: 3rem;
+  background-color: rgba(0, 0, 0, .1);
+  border: solid rgba(0, 0, 0, .15);
+  border-width: 1px 0;
+  box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
 }
 
-li {
-    float: left;
+.b-example-vr {
+  flex-shrink: 0;
+  width: 1.5rem;
+  height: 100vh;
 }
 
-li a {
-    display: block;
-    color: white;
-    text-align: center;
-    padding: 14px 16px;
-    text-decoration: none;
+.bi {
+  vertical-align: -.125em;
+  fill: currentColor;
 }
 
-li a:hover {
-    background-color: #111;
-    transition-duration: 1s;
+.nav-scroller {
+  position: relative;
+  z-index: 2;
+  height: 2.75rem;
+  overflow-y: hidden;
 }
 
-form {
-    color: white;
-    text-align: center;
-    margin-top: 2.6%;
-    display: block;
-    align-self: auto;
-    justify-content: flex-end;
-} */
+.nav-scroller .nav {
+  display: flex;
+  flex-wrap: nowrap;
+  padding-bottom: 1rem;
+  margin-top: -1px;
+  overflow-x: auto;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-overflow-scrolling: touch;
+}
+
+.form-control {
+  color: #190822 !important;
+}
+
+.form-control-dark {
+  border-color: var(--bs-gray);
+}
+
+.form-control-dark:focus {
+  border-color: #fff;
+  box-shadow: 0 0 0 .25rem rgba(255, 255, 255, .25);
+}
+
+.text-small {
+  font-size: 85%;
+}
+
+.dropdown-toggle {
+  outline: 0;
+}
+
+.dropdown-menu {
+  background-color: #39134c !important;
+}
+
+.purple-on-hover:hover {
+  background: #9933cc !important;
+  color: white !important;
+}
+
+.navbar {
+  background-color: #39134c !important;
+}
+
+.toast{
+  background-color: #39134c !important;
+  /* position: absolute;
+  top: 0%;
+  right: 0%; */
+}
+
+.toast-header{
+  background-color: #9933cc !important;
+  color: white !important;
+}
+
+.list-group-item{
+  background-color: #39134c !important;
+}
+
+.input-group-text{
+  background-color: #9933cc !important;
+}
+
+.texto-oscuro{
+  color: #190822 !important;
+}
+
+.texto-oscuro{
+  color: #190822 !important;
+}
+
+.fondo-medio{
+  background-color: #39134c !important;
+}
+
+.fondo-oscuro{
+  background-color: #190822 !important;
+}
+
+.progress-bar{
+  min-width: 10%;
+  max-width: 90%
+}
+
+.pagination{
+  --bs-pagination-bg: #39134c !important;
+  --bs-pagination-hover-bg: #9933cc !important;
+  --bs-pagination-active-bg: #9933cc !important;
+  --bs-pagination-focus-color: #fff !important;
+  --bs-pagination-focus-bg: #9933cc !important;
+
+}

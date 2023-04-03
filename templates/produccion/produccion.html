@@ -1,0 +1,13 @@
+{% extends "produccion/base.html" %}
+{% block content %}
+
+{% include 'mensajes.html' %}
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    <p class="col-sm-12 col-md-6 col-lg-6 text-white" >En el área de {{ datos['titulo']}} se pueden 
+        visualizar pedidos, ordenes, cambiar el estado a "En Producción" o "Terminado" y más.</p>
+</div>
+
+
+{% endblock %}

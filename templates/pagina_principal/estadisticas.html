@@ -1,0 +1,94 @@
+{% extends "pagina_principal/base.html" %}
+{% block content %}
+
+{% include 'mensajes.html' %}
+
+
+<div class="container my-3">
+    <h1>{{ datos['titulo'] }}</h1>
+    
+    <div class="row m-3">
+        <div class="col-sm-12 col-md-6 my-4">
+            <div class="row">
+                <h2>Pedidos <span class="badge bg-info rounded-pill">{{ datos['pedidos']['Total'] }}</span></h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="list-group p-0 my-3 col-sm-6 col-md-10 col-lg-6">
+                    <span class="text-center list-group-item justify-content-between align-items-center">Estados</span>
+                    <a href="{{url_for('verPedidosEstado', estado='Pendiente')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Pendiente
+                        <span class="badge bg-danger rounded-pill">{{ datos['pedidos']['Pendiente'] }}</span></a>
+                    <a href="{{url_for('verPedidosEstado', estado='En Producción')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">En Producción
+                        <span class="badge bg-warning rounded-pill">{{ datos['pedidos']['En Producción'] }}</span></a>
+                    <a href="{{url_for('verPedidosEstado', estado='Terminado')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Terminado
+                        <span class="badge bg-primary rounded-pill">{{ datos['pedidos']['Terminado'] }}</span></a>
+                    <a href="{{url_for('verPedidosEstado', estado='Entregado')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Entregado
+                        <span class="badge bg-success rounded-pill">{{ datos['pedidos']['Entregado'] }}</span></a>
+                </div>
+            </div>
+            <div class="progress fondo-oscuro" style="height: 25px">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje Pendiente'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje Pendiente'] }}%</div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje En Producción'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje En Producción'] }}%</div>
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje Terminado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje Terminado'] }}%</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje Entregado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje Entregado'] }}%</div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 col-md-6 my-4">
+            <div class="row">
+                <h2>Ordenes <span class="badge bg-info rounded-pill">{{ datos['ordenes']['Total'] }}</span></h2>
+            </div>
+            <div class="row justify-content-center">
+                <div class="list-group p-0 my-3 col-sm-6 col-md-10 col-lg-6">
+                    <span class="text-center list-group-item justify-content-between align-items-center">Estados</span>
+                    <a href="{{url_for('verOrdenesEstado', estado='Pendiente')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Pendiente
+                        <span class="badge bg-danger rounded-pill">{{ datos['ordenes']['Pendiente'] }}</span></a>
+                    <a href="{{url_for('verOrdenesEstado', estado='En Producción')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">En Producción
+                        <span class="badge bg-warning rounded-pill">{{ datos['ordenes']['En Producción'] }}</span></a>
+                    <a href="{{url_for('verOrdenesEstado', estado='Terminado')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Terminado
+                        <span class="badge bg-primary rounded-pill">{{ datos['ordenes']['Terminado'] }}</span></a>
+                    <a href="{{url_for('verOrdenesEstado', estado='Entregado')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Entregado
+                        <span class="badge bg-success rounded-pill">{{ datos['ordenes']['Entregado'] }}</span></a>
+                </div>
+            </div>
+            <div class="progress fondo-oscuro" style="height: 25px;">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Pendiente'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Pendiente'] }}%</div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje En Producción'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje En Producción'] }}%</div>
+                <div class="progress-bar bg-primary" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Terminado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Terminado'] }}%</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Entregado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Entregado'] }}%</div>
+            </div>
+
+
+
+            <div class="row justify-content-center">
+                <div class="list-group p-0 my-3 col-sm-6 col-md-10 col-lg-6">
+                    <span class="text-center list-group-item justify-content-between align-items-center">Prioridades</span>
+                    <a href="{{url_for('verOrdenesPrioridad', prioridad='Alta')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Alta
+                        <span class="badge bg-danger rounded-pill">{{ datos['ordenes']['Alta'] }}</span></a>
+                    <a href="{{url_for('verOrdenesPrioridad', prioridad='Media')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Media
+                        <span class="badge bg-warning rounded-pill">{{ datos['ordenes']['Media'] }}</span></a>
+                    <a href="{{url_for('verOrdenesPrioridad', prioridad='Baja')}}"
+                        class="d-flex justify-content-between align-items-center list-group-item purple-on-hover">Baja
+                        <span class="badge bg-success rounded-pill">{{ datos['ordenes']['Baja'] }}</span></a>
+                </div>
+            </div>
+            <div class="progress fondo-oscuro" style="height: 25px">
+                <div class="progress-bar bg-danger" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Alta'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Alta'] }}%</div>
+                <div class="progress-bar bg-warning" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Media'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Media'] }}%</div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Baja'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Baja'] }}%</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
