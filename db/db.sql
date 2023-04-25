@@ -1,41 +1,33 @@
 --          Queries para crear tablas
-CREATE TABLE IF NOT EXISTS "Usuarios" ( -- Tabla que almacena los usuarios 
-    usuario VARCHAR(255) NOT NULL PRIMARY KEY,
-    contraseña VARCHAR(255) NOT NULL
+CREATE TABLE IF NOT EXISTS "Usuarios" (
+    "id" INTEGER NOT NULL UNIQUE,
+    "usuario" VARCHAR NOT NULL,
+    "contraseña" VARCHAR NOT NULL,
+    PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-CREATE TABLE IF NOT EXISTS "Pedidos" ( -- Tabla que almacena los pedidos
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
-    cliente VARCHAR(255) NOT NULL,
-    fecha VARCHAR(255) NOT NULL,
-    total INT NOT NULL,
-    estado TEXT NOT NULL,
-    pedido TEXT NOT NULL
+CREATE TABLE IF NOT EXISTS "Productos" (
+    "id" INTEGER NOT NULL UNIQUE,
+    "nombre_producto" VARCHAR NOT NULL,
+    "precio" INT DEFAULT 0,
+    PRIMARY KEY("id" AUTOINCREMENT)
 );
 
-CREATE TABLE IF NOT EXISTS "Productos" ( -- Tabla que almacena productos y precios.
-    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-    nombre_producto VARCHAR(255) NOT NULL,
-    precio INT(255)
-);
-
-
--- Las tablas deberían ser creadas así
 CREATE TABLE IF NOT EXISTS "Pedidos" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"cliente"	TEXT NOT NULL,
-	"fecha"	TEXT NOT NULL,
-	"total"	NUMERIC NOT NULL DEFAULT 0,
-	"estado"	TEXT NOT NULL DEFAULT 'Pendiente',
-	"comentarios"	TEXT,
+	"id" INTEGER NOT NULL UNIQUE,
+	"cliente" TEXT NOT NULL,
+	"fecha" TEXT NOT NULL,
+	"total" NUMERIC NOT NULL DEFAULT 0,
+	"estado" TEXT NOT NULL DEFAULT "Pendiente",
+	"comentarios" TEXT,
 	PRIMARY KEY("id" AUTOINCREMENT)
 );
 INSERT INTO "Pedidos"(cliente, fecha, total , estado, comentarios) VALUES ("Gloria Alvarez", "14/02/2023 21:20:45", 219000, "Pendiente", "['Los juegos de cuello con letras hacerlo lo antes posíble', 'Las fajas háganlas por la noche']");
 
 
 CREATE TABLE IF NOT EXISTS "Ordenes" (
-	"id"	INTEGER NOT NULL UNIQUE,
-	"id_Pedidos"	INTEGER NOT NULL,
+	"id" INTEGER NOT NULL UNIQUE,
+	"id_pedidos"	INTEGER NOT NULL,
 	"producto"	TEXT NOT NULL,
 	"cantidad"	INTEGER NOT NULL,
 	"precio"	NUMERIC NOT NULL,
@@ -43,14 +35,14 @@ CREATE TABLE IF NOT EXISTS "Ordenes" (
 	"prioridad" TEXT NOT NULL DEFAULT 'Baja',
 	"patron"	TEXT NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT),
-	FOREIGN KEY("id_Pedidos") REFERENCES "Pedidos"("id")
+	FOREIGN KEY("id_pedidos") REFERENCES "Pedidos"("id")
 );
-INSERT INTO "Ordenes"(id_Pedidos, producto, cantidad, precio, prioridad, patron) VALUES(1, "Juego de Cuello Letras", 27, 135000, "Alta", "O.verde.2-L.blanco.2-L.verde.2-F.blanco");
-INSERT INTO "Ordenes"(id_Pedidos, producto, cantidad, precio, prioridad, patron) VALUES(1, "Solo Faja Dobles", 14, 84000, "Baja", "O.rojo.2-L.blanco.2-L.rojo.2-F.blanco");
+INSERT INTO "Ordenes"(id_pedidos, producto, cantidad, precio, prioridad, patron) VALUES(1, "Juego de Cuello Letras", 27, 135000, "Alta", "O.verde.2-L.blanco.2-L.verde.2-F.blanco");
+INSERT INTO "Ordenes"(id_pedidos, producto, cantidad, precio, prioridad, patron) VALUES(1, "Solo Faja Dobles", 14, 84000, "Baja", "O.rojo.2-L.blanco.2-L.rojo.2-F.blanco");
 
 
 -- y se puede visualizar así:
-SELECT * FROM Pedidos INNER JOIN Ordenes ON Pedidos.id = Ordenes.id_Pedidos;
+SELECT * FROM Pedidos INNER JOIN Ordenes ON Pedidos.id = Ordenes.id_pedidos;
 SELECT Pedidos.cliente, Pedidos.fecha, Pedidos.total, Pedidos.estado, Ordenes.producto, Ordenes.cantidad, Ordenes.precio, Ordenes.patron FROM Pedidos INNER JOIN Ordenes ON Pedidos.id = Ordenes.id_Pedidos;
 
 

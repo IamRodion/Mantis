@@ -17,7 +17,7 @@
                             <th scope="col">Producto</th>
                             <th scope="col">Cantidad</th>
                             <th scope="col">Prioridad</th>
-                            <th scope="col">Patrón</th>
+                            <th scope="col">Detalles</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -45,7 +45,37 @@
                                         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                     </div>
                                     <div class="offcanvas-body fondo-oscuro text-white">
-                                        <div>{{ orden[7] }}</div>
+                                        <table class="table table-striped border-info table-bordered align-middle">
+                                            <thead>
+                                                <tr class="table-info text-center">
+                                                    <th scope="col">Tipo</th>
+                                                    <th scope="col">Color</th>
+                                                    <th scope="col">Vueltas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for linea in orden[7].split("-")[::-1] %}
+                                                <tr>
+                                                    {% for dato in linea.split(".")[0] %}
+                                                        {% if dato == 'F' %}
+                                                            <th>Fondo</th>
+                                                        {% elif dato == 'L' %}
+                                                            <th>Linea</th>
+                                                        {% elif dato == 'O' %}
+                                                            <th>Orillo</th>
+                                                        {% else %}
+                                                            <th>Parámetro</th>
+                                                        {% endif %}
+
+                                                    {% endfor %}
+                                                    <td>{{ linea.split(".")[1] }}</td>
+                                                    <td>{{ linea.split(".")[2] }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        <p><a class="btn btn-info btn-sm" href="{{url_for('verPedido', id=orden[1])}}">Ver Pedido</a></p>
+                                        <p>Cambiar estado a: <button class="btn btn-warning btn-sm" type="button">En Producción</button></p>
                                     </div>
                                 </div>
                             </td>
@@ -90,13 +120,42 @@
 
                             <td class="text-center">
                                 <button class="btn btn-info btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#{{ orden[0] }}" aria-controls="{{ orden[0] }}">Ver Patrón</button>
-                                <div class="offcanvas offcanvas-bottom" tabindex="-1" id="{{ orden[0] }}" aria-labelledby="{{ orden[0] }}Label">
+                                <div class="offcanvas offcanvas-start" tabindex="-1" id="{{ orden[0] }}" aria-labelledby="{{ orden[0] }}Label">
                                     <div class="offcanvas-header bg-info text-white">
                                         <h5 class="offcanvas-title" id="{{ orden[0] }}">Orden #{{ orden[0] }}</h5>
                                         <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                                     </div>
                                     <div class="offcanvas-body fondo-oscuro text-white">
-                                        <div>{{ orden[7] }}</div>
+                                        <table class="table table-striped border-info table-bordered align-middle">
+                                            <thead>
+                                                <tr class="table-info text-center">
+                                                    <th scope="col">Tipo</th>
+                                                    <th scope="col">Color</th>
+                                                    <th scope="col">Vueltas</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for linea in orden[7].split("-")[::-1] %}
+                                                <tr>
+                                                    {% for dato in linea.split(".")[0] %}
+                                                        {% if dato == 'F' %}
+                                                            <th>Fondo</th>
+                                                        {% elif dato == 'L' %}
+                                                            <th>Linea</th>
+                                                        {% elif dato == 'O' %}
+                                                            <th>Orillo</th>
+                                                        {% else %}
+                                                            <th>Parámetro</th>
+                                                        {% endif %}
+
+                                                    {% endfor %}
+                                                    <td>{{ linea.split(".")[1] }}</td>
+                                                    <td>{{ linea.split(".")[2] }}</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        Cambiar estado a: <button class="btn btn-primary btn-sm" type="button">Terminado</button>
                                     </div>
                                 </div>
                             </td>

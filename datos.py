@@ -4,8 +4,8 @@ import os, random, hashlib
 import sqlite3 as sql
 from faker import Faker
 
-#database = 'db/CPB.db'
-database = 'db/CPB.db'
+database = 'db/pruebaMantis.db'
+# database = 'db/Mantis.db'
 
 fake = Faker("es_CO")
 
@@ -20,13 +20,22 @@ def crearCursor(database): # Genera un objeto cursor a traves de una base de dat
             cursor = conn.cursor()
             return cursor, conn # Devuelve el objeto cursor y el objeto conn para cerrar la conexión a la base de datos al final
 
-def consultarQuery(query): # Función que realiza una consulta tomando como argumento una query SQL.
+def consultarDatos(query): # Función que realiza una consulta tomando como argumento una query SQL.
     cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
     cursor.execute(query) # Ejecutar una solicitud con el cursor.
     respuesta = cursor.fetchall() # Se vuelcan los datos en una variable.
     conn.commit() # Aplicar cambios.
     conn.close() # Cerrar conexión.
     return respuesta # Se devuelven los datos recolectados.
+
+def consultarScript(query): # Función que realiza una consulta tomando como argumento una query SQL.
+    cursor, conn = crearCursor(database) # Creando cursor y conexión con la base de datos.
+    cursor.executescript(query) # Ejecutar una solicitud con el cursor.
+    respuesta = cursor.fetchall() # Se vuelcan los datos en una variable.
+    conn.commit() # Aplicar cambios.
+    conn.close() # Cerrar conexión.
+    return respuesta # Se devuelven los datos recolectados.
+
 
 def limpiarPantalla(): # Función que limpia la pantalla.
     if os.name == 'posix': # Sí es un OS unix se ejecutará el comando "clear".
@@ -120,17 +129,127 @@ def mostrarEstado(): # Esta función cuenta la cantidad de pedidos por el estado
 
 
 def verPedido(id):
-    pedido = consultarQuery(f'SELECT * FROM Pedidos WHERE id = {id}')
-    ordenes = consultarQuery(f'SELECT * FROM Ordenes WHERE id_Pedidos = {id}')
+    pedido = consultarDatos(f'SELECT * FROM Pedidos WHERE id = {id}')
+    ordenes = consultarDatos(f'SELECT * FROM Ordenes WHERE id_Pedidos = {id}')
     return pedido, ordenes
 
 def consultarUsuario(usuario, contraseña): # Función que revisa sí un usuario está en la base de datos.
     contraseña = hashlib.sha256(contraseña).hexdigest()
     query = f'SELECT * FROM Usuarios WHERE usuario="{usuario}" AND contraseña={contraseña}'
-    if consultarQuery(query):
+    if consultarDatos(query):
         return True
     else:
         return False
 
-for i in range(1, 201):
-    crearPedido(i)
+#for i in range(1, 201):
+#    crearPedido(i)
+
+# ---------Funciones para l manejo de la base de datos---------
+    
+TABLAS = """
+CREATE TABLE IF NOT EXISTS "Usuarios" (
+    "id" INTEGER NOT NULL UNIQUE,
+    "usuario" VARCHAR NOT NULL,
+    "contraseña" VARCHAR NOT NULL,
+    PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE TABLE IF NOT EXISTS "Productos" (
+    "id" INTEGER NOT NULL UNIQUE,
+    "nombre_producto" VARCHAR NOT NULL,
+    "precio" INT DEFAULT 0,
+    PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE TABLE IF NOT EXISTS "Pedidos" (
+	"id" INTEGER NOT NULL UNIQUE,
+	"cliente" TEXT NOT NULL,
+	"fecha" TEXT NOT NULL,
+	"total" NUMERIC NOT NULL DEFAULT 0,
+	"estado" TEXT NOT NULL DEFAULT "Pendiente",
+	"comentarios" TEXT,
+	PRIMARY KEY("id" AUTOINCREMENT)
+);
+
+CREATE TABLE IF NOT EXISTS "Ordenes" (
+	"id" INTEGER NOT NULL UNIQUE,
+	"id_pedidos" INTEGER NOT NULL,
+	"producto" TEXT NOT NULL,
+	"cantidad" INTEGER NOT NULL,
+	"precio" NUMERIC NOT NULL,
+    "estado" TEXT NOT NULL DEFAULT 'Pendiente',
+	"prioridad" TEXT NOT NULL DEFAULT 'Baja',
+	"patron" TEXT NOT NULL,
+	PRIMARY KEY("id" AUTOINCREMENT),
+	FOREIGN KEY("id_pedidos") REFERENCES "Pedidos"("id")
+);"""
+
+consultarScript(TABLAS)
+
+# def crearTablaUsuarios():
+#     QUERY = """
+#     CREATE TABLE IF NOT EXISTS "Usuarios" (
+#         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+#         usuario VARCHAR(255) NOT NULL PRIMARY KEY,
+#         contraseña VARCHAR(255) NOT NULL
+#     );"""
+#     try:
+#         consultarDatos(QUERY)
+#         print('Se creo la tabla "Usuarios" correctamente.')
+#     except:
+#         print('No se pudo crear la tabla "Usuarios".')    
+
+# def crearTablaProductos():
+#     QUERY = """
+#     CREATE TABLE IF NOT EXISTS "Productos" (
+#         id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+#         nombre_producto VARCHAR NOT NULL,
+#         precio INT
+#     );"""
+#     try:
+#         consultarDatos(QUERY)
+#         print('Se creo la tabla "Productos" correctamente.')
+#     except:
+#         print('No se pudo crear la tabla "Productos".')
+
+# def crearTablaPedidos():
+#     QUERY = """
+#     CREATE TABLE IF NOT EXISTS "Pedidos" (
+#         "id"	INTEGER NOT NULL UNIQUE,
+#         "cliente"	TEXT NOT NULL,
+#         "fecha"	TEXT NOT NULL,
+#         "total"	NUMERIC NOT NULL DEFAULT 0,
+#         "estado"	TEXT NOT NULL DEFAULT 'Pendiente',
+#         "comentarios"	TEXT,
+#         PRIMARY KEY("id" AUTOINCREMENT)
+#     );"""
+#     try:
+#         consultarDatos(QUERY)
+#         print('Se creo la tabla "Pedidos" correctamente.')
+#     except:
+#         print('No se pudo crear la tabla "Pedidos".')
+
+# def crearTablaOrdenes():
+#     QUERY = """
+#     CREATE TABLE IF NOT EXISTS "Ordenes" (
+# 	    "id"	INTEGER NOT NULL UNIQUE,
+# 	    "id_pedidos"	INTEGER NOT NULL,
+# 	    "producto"	TEXT NOT NULL,
+# 	    "cantidad"	INTEGER NOT NULL,
+# 	    "precio"	NUMERIC NOT NULL,
+#         "estado"	TEXT NOT NULL DEFAULT 'Pendiente',
+# 	    "prioridad" TEXT NOT NULL DEFAULT 'Baja',
+# 	    "patron"	TEXT NOT NULL,
+# 	    PRIMARY KEY("id" AUTOINCREMENT),
+# 	    FOREIGN KEY("id_Pedidos") REFERENCES "Pedidos"("id")
+#     );"""
+#     try:
+#         consultarDatos(QUERY)
+#         print('Se creo la tabla "Ordenes" correctamente.')
+#     except:
+#         print('No se pudo crear la tabla "Ordenes".')
+
+# crearTablaProductos()
+# crearTablaUsuarios()
+# crearTablaOrdenes()
+# crearTablaPedidos()

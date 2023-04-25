@@ -1,45 +1,115 @@
 {% extends "recepcion/base.html" %}
 {% block content %}
 
-<!-- Este código muestra mensajes en pantalla -->
-{% with mensajes = get_flashed_messages(with_categories=true) %}
-{% if mensajes %}
-{% for categoria, mensaje in mensajes %}
-{% if categoria == 'Rojo' %}
-<div class="alert alert-dismissible alert-danger">
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
-            mensaje[1] }}</strong>".</span>
-</div>
-{% endif %}
-{% if categoria == 'Verde' %}
-<div class="alert alert-dismissible alert-success">
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button><span>{{ mensaje[0] }} "<strong>{{
-            mensaje[1] }}</strong>".</span>
-</div>
-{% endif %}
-{% endfor %}
-{% endif %}
-{% endwith %}
+{% include 'mensajes.html' %}
 
 <div class="container my-3">
     <h1>{{ datos['titulo'] }}</h1>
-    <div class="form-group col-sm-8 col-md-6 col-lg-4">
+    <div class="form-group">
         <form action="/nuevo_pedido" method="post">
-            <label for="post-cliente" class="form-label mt-4">Cliente</label>
-            <input id="post-cliente" type="text" name="cliente" required autofocus class="form-control" placeholder="Nombre del Cliente">
-            <label for="post-pedido" class="form-label mt-4">Pedido</label>
-            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Descripción del Pedido">
-            <label for="post-pedido" class="form-label mt-4">Comentarios</label>
-            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Comentarios del Pedido">
-            <label for="post-pedido" class="form-label mt-4">Producto</label>
-            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Producto">
-            <label for="post-pedido" class="form-label mt-4">Cantidad</label>
-            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Cantidad">
-            <label for="post-pedido" class="form-label mt-4">Prioridad</label>
-            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Prioridad">
-            <label for="post-pedido" class="form-label mt-4">Patrón</label>
-            <input id="post-pedido" type="text" name="pedido" required autofocus class="form-control" placeholder="Patrón">
-            <button type="submit" class="btn btn-info form-label mt-4">Crear Pedido</button>
+
+            <div class="row mb-2 py-3 border border-info rounded align-items-center">
+                <div class="col-lg-8 my-1">
+                    <div class="row">
+                        <div class="col-lg-6 mb-2">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="floatingInput" placeholder="Nombre del Cliente">
+                                <label class="texto-claro" for="floatingInput">Cliente</label>
+                            </div>
+                            <!-- <label for="post-cliente" class="form-label">Cliente: </label>
+                            <input id="post-cliente" type="text" name="cliente" required autofocus class="form-control" placeholder="Nombre del Cliente"> -->
+                        </div>
+                        <div class="col-lg-6 mb-2">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="NIT del Cliente">
+                                <label class="texto-claro" for="floatingInput">NIT</label>
+                            </div>
+                            <!-- <label for="post-NIT" class="form-label">NIT: </label>
+                            <input id="post-NIT" type="text" name="NIT" class="form-control" placeholder="NIT del Cliente"> -->
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 mb-2">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="floatingInput" placeholder="Dirección del Cliente">
+                                <label class="texto-claro" for="floatingInput">Dirección</label>
+                            </div>
+                            <!-- <label for="post-direccion" class="form-label">Dirección: </label>
+                            <input id="post-direccion" type="text" name="direccion" class="form-control" placeholder="Dirección del Cliente"> -->
+                        </div>
+                        <div class="col-lg-6 mb-2">
+                            <div class="form-floating">
+                                <input name="telefono" type="text" class="form-control" id="floatingInput" placeholder="Télefono del Cliente">
+                                <label class="texto-claro" for="floatingInput">Teléfono</label>
+                            </div>
+                            <!-- <label for="post-telefono" class="form-label">Télefono: </label>
+                            <input id="post-telefono" type="text" name="telefono" class="form-control" placeholder="Télefono del Cliente"> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 my-1">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-floating">
+                                <textarea id="floatingInput" type="text" name="comentarios" class="form-control" style="height: 170px; resize: none;" placeholder="Comentarios del Pedido"></textarea>
+                                <label for="floatingInput" class="form-label texto-claro">Comentarios</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row py-3 mb-2 text-info text-center border border-info rounded align-items-center">
+
+                <div class="row">
+                    <div class="col-2 text-center">
+                        <span>Cantidad</span>
+                    </div>
+                    <div class="col-4 text-center">
+                        <span>Producto</span>
+                    </div>
+                    <div class="col-3 text-center">
+                        <span>Precio/Unidad</span>
+                    </div>
+                    <div class="col-3 text-center">
+                        <span>Precio/Total</span>
+                    </div>
+                </div>
+                
+                <div class="row" id="ordenes">
+                    <div class="row m-1">
+                        <div class="col-2">
+                            <input id="cantidad" name="cantidad" class="form-control" type="number" min="0" placeholder="0" onchange="calcularUnidadTotal()">
+                        </div>
+                        <div class="col-4">
+                            <select id="producto" name="producto" class="form-select texto-oscuro" onchange="calcularUnidadTotal()">
+                                <!-- <option value=""></option> -->
+                                {% for producto in datos['productos'] %}
+                                    <option value="{{ producto[2] }}">{{ producto[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-3">
+                            <input id="Precio/Unidad" name="Precio/Unidad" class="form-control" type="number" min="0" placeholder="0">
+                        </div>
+                        <div class="col-3">
+                            <input id="Precio/Total" name="Precio/Total" class="form-control" type="number" min="0" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-lg-6">
+                    <button class="btn btn-info my-2 my-sm-0" type="button" onclick="crearLinea()">Nueva Linea</button>
+                </div>
+                <div class="col-lg-6">
+                    <button class="btn btn-info my-2 my-sm-0" type="button">Enviar Pedido</button>
+                </div>
+            </div>
+
         </form>
     </div>
 </div>

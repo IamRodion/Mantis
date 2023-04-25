@@ -8,14 +8,14 @@
 
     <!-- Este código muestra la una tabla con los pedidos registrados -->
     <div class="row">
-        <div class="col-sm-12 col-md-4">
-            <h3>Lista de Precios</h3>
+        <div class="col-sm-12 col-md-6 col-lg-5">
+            <h3 class="text-center">Lista de Precios</h3>
             <table class="table table-striped border-info table-bordered align-middle">
                 <caption>{{ datos['titulo'] }}</caption>
                 <thead>
                     <tr class="table-info">
                         <th scope="col">Producto</th>
-                        <th scope="col">Precio</th>
+                        <th class="text-end" scope="col">Precio</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -28,80 +28,43 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-sm-12 col-md-8">
+        
+        <div class="col-sm-12 col-md-6 col-lg-7">
             <h3 class="text-center">Calculadora de Precios</h3>
             <div class="form-group">
                 <fieldset>
-                    <label class="form-label" for="producto">Producto</label>
-                    <select name="producto" class="form-select texto-oscuro" id="producto" onchange="calcular()">
-                        {% for producto in datos['productos'] %}
-                            <option value="{{ producto[2] }}">{{ producto[1] }}</option>
-                        {% endfor %}
-                    </select>
+                    <div class="row justify-content-center ">
+                        <div class="col-10 col-sm-9 col-md-12 col-lg-8 my-1">
+                            <label class="form-label" for="producto">Producto</label>
+                            <select name="producto" class="form-select texto-oscuro" id="producto" onchange="calcularTotal()">
+                                {% for producto in datos['productos'] %}
+                                    <option value="{{ producto[2] }}">{{ producto[1] }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-4 col-sm-4 col-md-6 col-lg-4 my-1">
+                            <label class="form-label" for="cantidad">Cantidad</label>
+                            <input class="form-control texto-oscuro" id="cantidad" type="number" placeholder="0"  onchange="calcularTotal()">
+                        </div>
+                        <div class="col-6 col-sm-5 col-md-6 col-lg-4 my-1">
+                            <label class="form-label" for="resultado">Resultado</label>
+                            <input class="form-control texto-oscuro" id="resultado" type="number" placeholder="0" readonly="">
+                        </div>
+                    </div>
+                    
 
-                    <label class="form-label" for="cantidad">Cantidad</label>
-                    <input class="form-control texto-oscuro" id="cantidad" type="number" placeholder="0"  onchange="calcular()">
-
-                    <label class="form-label" for="resultado">Resultado</label>
-                    <input class="form-control texto-oscuro" id="resultado" type="number" placeholder="0" readonly="">
                 </fieldset>
-                <script type="text/javascript">
+                <!-- <script type="text/javascript">
                     function calcular(){
                         var precio_producto = document.getElementById('producto').value
                         var cantidad = document.getElementById('cantidad').value
 
                         document.getElementById('resultado').value = precio_producto*cantidad
                     }
-                </script>
+                </script> -->
             </div>
-
-                <!-- <div class="row justify-content-center px-md-5 px-sm-0">
-                    <label class="col-form-label col-4 text-white text-center mb-2" for="">Producto</label>
-                    <div class="col-8 mb-2">
-                        <select name="producto" class="form-select texto-oscuro" id="producto" onchange="calcular()">
-                            {% for producto in datos['productos'] %}
-                                <option value="{{ producto[2] }}">{{ producto[1] }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-    
-                    <label class="col-form-label col-4 text-white text-center mb-2" for="cantidad">Cantidad</label>
-                    <div class="col-8 mb-2">
-                        <input type="number" placeholder="0" id="cantidad" onchange="calcular()">
-                    </div>
-    
-                    <div class="col-12 text-center mb-2">
-                        <button onclick="calcular();" class="btn btn-info" type="button">Calcular</button>
-                    </div>
-
-                    <label class="col-form-label col-4 text-white text-center mb-2" for="resultado">Resultado</label>
-                    <div class="col-8 mb-2">
-                        <input class="form-label" id="resultado" type="text">
-                    </div> -->
-    
-                <!-- </div> -->
-
-            <!-- <div class="col-md-7 px-2">
-                <div class="form-group">
-                    <div class="input-group mb-2">
-                        <span class="input-group-text">Producto</span>
-                        <select class="form-select texto-oscuro" id="exampleSelect1">
-                            {% for producto in datos['productos'] %}
-                                <option>{{ producto[1] }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text">Cantidad</span>
-                        <input type="text" class="form-control texto-oscuro" aria-label="Amount (to the nearest dollar)">
-                        <button class="btn btn-info my-2 my-sm-0" type="submit" value="Buscar">Calcular</button>
-                    </div>
-                    <div class="input-group mb-2">
-                        <span class="input-group-text">Total</span>
-                        <input class="form-control texto-oscuro" id="readOnlyInput" type="text" placeholder="Resultado" readonly="">
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </div>

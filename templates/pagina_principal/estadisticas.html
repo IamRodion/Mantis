@@ -7,11 +7,9 @@
 <div class="container my-3">
     <h1>{{ datos['titulo'] }}</h1>
     
-    <div class="row m-3">
-        <div class="col-sm-12 col-md-6 my-4">
-            <div class="row">
-                <h2>Pedidos <span class="badge bg-info rounded-pill">{{ datos['pedidos']['Total'] }}</span></h2>
-            </div>
+    <div class="row align-items-center my-5">
+        <h3>Pedidos <span class="badge bg-info rounded-pill">{{ datos['pedidos']['Total'] }}</span></h3>
+        <div class="col-md-6">
             <div class="row justify-content-center">
                 <div class="list-group p-0 my-3 col-sm-6 col-md-10 col-lg-6">
                     <span class="text-center list-group-item justify-content-between align-items-center">Estados</span>
@@ -29,6 +27,8 @@
                         <span class="badge bg-success rounded-pill">{{ datos['pedidos']['Entregado'] }}</span></a>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
             <div class="progress fondo-oscuro" style="height: 25px">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje Pendiente'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje Pendiente'] }}%</div>
                 <div class="progress-bar bg-warning" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje En Producción'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje En Producción'] }}%</div>
@@ -36,11 +36,11 @@
                 <div class="progress-bar bg-success" role="progressbar" style="width: {{ datos['pedidos']['Porcentaje Entregado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['pedidos']['Porcentaje Entregado'] }}%</div>
             </div>
         </div>
+    </div>
 
-        <div class="col-sm-12 col-md-6 my-4">
-            <div class="row">
-                <h2>Ordenes <span class="badge bg-info rounded-pill">{{ datos['ordenes']['Total'] }}</span></h2>
-            </div>
+    <div class="row align-items-center my-4">
+        <h3>Ordenes <span class="badge bg-info rounded-pill">{{ datos['ordenes']['Total'] }}</span></h3>
+        <div class="col-md-6">
             <div class="row justify-content-center">
                 <div class="list-group p-0 my-3 col-sm-6 col-md-10 col-lg-6">
                     <span class="text-center list-group-item justify-content-between align-items-center">Estados</span>
@@ -58,15 +58,17 @@
                         <span class="badge bg-success rounded-pill">{{ datos['ordenes']['Entregado'] }}</span></a>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
             <div class="progress fondo-oscuro" style="height: 25px;">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Pendiente'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Pendiente'] }}%</div>
                 <div class="progress-bar bg-warning" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje En Producción'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje En Producción'] }}%</div>
                 <div class="progress-bar bg-primary" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Terminado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Terminado'] }}%</div>
                 <div class="progress-bar bg-success" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Entregado'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Entregado'] }}%</div>
             </div>
+        </div>
 
-
-
+        <div class="col-md-6">
             <div class="row justify-content-center">
                 <div class="list-group p-0 my-3 col-sm-6 col-md-10 col-lg-6">
                     <span class="text-center list-group-item justify-content-between align-items-center">Prioridades</span>
@@ -81,6 +83,8 @@
                         <span class="badge bg-success rounded-pill">{{ datos['ordenes']['Baja'] }}</span></a>
                 </div>
             </div>
+        </div>
+        <div class="col-md-6">
             <div class="progress fondo-oscuro" style="height: 25px">
                 <div class="progress-bar bg-danger" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Alta'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Alta'] }}%</div>
                 <div class="progress-bar bg-warning" role="progressbar" style="width: {{ datos['ordenes']['Porcentaje Media'] }}%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">{{ datos['ordenes']['Porcentaje Media'] }}%</div>

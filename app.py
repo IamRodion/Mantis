@@ -69,11 +69,7 @@ def obtenerPedidos(): # Función que devuelve un diccionario con la cantidad de 
         "Porcentaje Pendiente": consultarPorcentaje("Pedidos", "estado", "Pendiente"),
         "Porcentaje En Producción": consultarPorcentaje("Pedidos", "estado", "En Producción"),
         "Porcentaje Terminado": consultarPorcentaje("Pedidos", "estado", "Terminado"),
-        "Porcentaje Entregado": consultarPorcentaje("Pedidos", "estado", "Entregado"),
-        #"PorcentajePendiente": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="Pendiente"')[0],
-        #"PorcentajeEnProducción": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="En Producción"')[0],
-        #"PorcentajeTerminado": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="Terminado"')[0],
-        #"PorcentajeEntregado": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT IFNULL(COUNT(*), 0) FROM Pedidos) FROM Pedidos WHERE estado="Entregado"')[0]
+        "Porcentaje Entregado": consultarPorcentaje("Pedidos", "estado", "Entregado")
     }
 
     return pedidos
@@ -98,10 +94,6 @@ def obtenerOrdenes(): # Función que devuelve un diccionario con la cantidad de 
         "Porcentaje Alta": consultarPorcentaje("Ordenes", "prioridad", "Alta"),
         "Porcentaje Media": consultarPorcentaje("Ordenes", "prioridad", "Media"),
         "Porcentaje Baja": consultarPorcentaje("Ordenes", "prioridad", "Baja")
-
-        #"PorcentajeAlta": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT COUNT(*) FROM Ordenes) FROM Ordenes WHERE prioridad="Alta"')[0],
-        #"PorcentajeMedia": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT COUNT(*) FROM Ordenes) FROM Ordenes WHERE prioridad="Media"')[0],
-        #"PorcentajeBaja": consultarDato('SELECT IFNULL(COUNT(*), 0) * 100 / (SELECT COUNT(*) FROM Ordenes) FROM Ordenes WHERE prioridad="Baja"')[0]
     }
 
     return ordenes
@@ -198,11 +190,15 @@ def ordenes():
 @app.route('/nuevo_pedido', methods = ['GET','POST']) # Ruta que entrega la plantilla para crear un pedido (GET) y para enviar los datos del pedido nuevo a la base de datos (POST).
 def crearPedido():
     if request.method == 'GET': # Cuando se solicita la plantilla html para crear un pedido.
+        query = 'SELECT * FROM Productos'
+        productos = consultarQuery(query)
         datos = { # Datos a mostrar en la página.
             'pestaña': 'Nuevo Pedido',
-            'titulo': 'Nuevo Pedido'
+            'titulo': 'Nuevo Pedido',
+            'productos': productos
             }
         return render_template('recepcion/nuevo_pedido.html', datos=datos) # Devolver la plantilla que contiene el formulario a llenar.
+        
     elif request.method == 'POST': # Cuando se está devolviendo la plantilla con los valores completados.
         cliente = request.form['cliente'] # Se obtiene el cliente indicado por el usuario en la plantilla.
         fecha = obtenerFecha() # Obteniendo fecha y hora del momento en que se realiza el registro.
