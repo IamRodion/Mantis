@@ -5,6 +5,21 @@
 # Mantis
 Mantis es un programa web creado en Python con el framework Flask, para la gestión de pedidos de micro-empresas.
 
+</br>
+
+
+<div align="center">
+    <div>
+        <div>Pantalla de login, página de inicio y página de productos en la versión de teléfono.</div>
+        <img src="extras/img/Mantis Phone.gif"/>
+    </div>
+    </br>
+    <div>
+        <div>Pantalla de login, página de inicio y página de productos en la versión de PC.</div>
+        <img style="width: 450px;" src="extras/img/Mantis PC.gif"/>
+    </div>
+</div>
+
 
 ## Instalación
 
