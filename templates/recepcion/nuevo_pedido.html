@@ -63,7 +63,7 @@
             <div class="row py-3 mb-2 text-info text-center border border-info rounded align-items-center">
 
                 <div class="row">
-                    <div class="col-2 text-center">
+                    <div class="col-1 text-center">
                         <span>Cantidad</span>
                     </div>
                     <div class="col-4 text-center">
@@ -75,30 +75,41 @@
                     <div class="col-3 text-center">
                         <span>Precio/Total</span>
                     </div>
+                    <div class="col-1 text-center">
+                        <span>Acciones</span>
+                    </div>
                 </div>
                 
                 <div class="row" id="ordenes">
-                    <div class="row m-1">
+                    <!-- <div class="row m-1">
                         <div class="col-2">
-                            <input id="cantidad" name="cantidad" class="form-control" type="number" min="0" placeholder="0" onchange="calcularUnidadTotal()">
+                            <input id="cantidad" name="cantidad" class="form-control" type="number" min="0" placeholder="0">
                         </div>
                         <div class="col-4">
-                            <select id="producto" name="producto" class="form-select texto-oscuro" onchange="calcularUnidadTotal()">
-                                <!-- <option value=""></option> -->
-                                {% for producto in datos['productos'] %}
-                                    <option value="{{ producto[2] }}">{{ producto[1] }}</option>
-                                {% endfor %}
+                            <select id="producto" name="producto" class="form-select texto-oscuro">
+                                <option value="3800">Juego de Cuellos Acrílico</option>
+                                <option value="2000">Solo Cuello Acrílico</option>
+                                <option value="2000">Solo Tira Acrílico</option>
+                                <option value="5000">Juego de Cuello Letras</option>
+                                <option value="6000">Cuello y Puño Letras</option>
+                                <option value="3500">Solo Cuello Letras</option>
+                                <option value="4000">Juego de Cuello Hilo</option>
+                                <option value="2200">Solo Cuello Hilo</option>
+                                <option value="12000">Juego Fajas Completo</option>
+                                <option value="6000">Solo Faja Dobles</option>
+                                <option value="4000">Cuello Redondo Doble</option>
                             </select>
                         </div>
                         <div class="col-3">
                             <input id="Precio/Unidad" name="Precio/Unidad" class="form-control" type="number" min="0" placeholder="0">
                         </div>
+
                         <div class="col-3">
                             <input id="Precio/Total" name="Precio/Total" class="form-control" type="number" min="0" placeholder="0">
                         </div>
-                    </div>
+                        
+                    </div> -->
                 </div>
-
             </div>
 
             <div class="row">
